@@ -1,0 +1,20 @@
+:root {
+  color-scheme: only light;
+  font-family: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  color: #101419;
+  background-color: #f7f4ef;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #f2ede2 0%, #e8e0d2 45%, #f7f4ef 100%);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
