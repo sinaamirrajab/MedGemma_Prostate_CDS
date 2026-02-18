@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "convert:mha": "node scripts/convert-mha-to-nifti.mjs",
+    "api:medgemma": "python backend/medgemma_api.py",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",

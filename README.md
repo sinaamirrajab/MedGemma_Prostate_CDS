@@ -1,16 +1,33 @@
-# React + Vite
+# CDS App (MedGemma Treatment Recommendations)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This app provides a prostate cancer clinical decision support UI with imaging preview, clinical inputs, and treatment recommendations.
 
-Currently, two official plugins are available:
+## MedGemma Recommendation Feature
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- A local Python API endpoint is available at `POST /api/medgemma/recommend`.
+- The app requests treatment recommendations from `google/medgemma-1.5-4b-it`.
+- The recommendation panel renders the top 3 options.
+- Each option has a `Show details` / `Hide details` button.
+- If MedGemma is unavailable, the API returns a structured fallback recommendation.
 
-## React Compiler
+## Run
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Start the Python API in the notebook environment:
 
-## Expanding the ESLint configuration
+```bash
+conda activate /mnt/data9/conda/medgemma
+python backend/medgemma_api.py
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Start frontend:
+
+```bash
+npm run dev
+```
+
+Vite proxies `/api/*` to `http://127.0.0.1:8000` by default.
+You can override proxy target:
+
+```bash
+VITE_MEDGEMMA_API_TARGET=http://127.0.0.1:8000 npm run dev
+```
