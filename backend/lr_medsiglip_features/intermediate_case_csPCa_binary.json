@@ -1,0 +1,17 @@
+{
+  "label": "case_csPCa_binary",
+  "best_params": {
+    "clf": "LogisticRegression(class_weight={0: 0.6982182628062361, 1: 1.7612359550561798},\n                   max_iter=5000, n_jobs=-1, random_state=42, solver='saga',\n                   tol=0.001)",
+    "clf__C": 0.01,
+    "clf__penalty": "l2",
+    "pca__n_components": null
+  },
+  "cv_auroc": {
+    "mean": 0.755616448536033,
+    "std": 0.033415586472033486
+  },
+  "oof_auroc_trainval": 0.7525305923275193,
+  "oof_ap_trainval": 0.5294484054559244,
+  "optimized_threshold": 0.5199999999999998,
+  "oof_f1_trainval_at_threshold": 0.5573366214549939
+}

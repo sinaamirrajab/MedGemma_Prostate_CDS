@@ -1,0 +1,45 @@
+{
+  "feature_column": "feature",
+  "label_columns": [
+    "case_csPCa_binary"
+  ],
+  "random_state": 42,
+  "cv_folds": 5,
+  "best_params": {
+    "case_csPCa_binary": {
+      "clf": "LogisticRegression(class_weight={0: 0.6982182628062361, 1: 1.7612359550561798},\n                   max_iter=5000, n_jobs=-1, random_state=42, solver='saga',\n                   tol=0.001)",
+      "clf__C": 0.01,
+      "clf__penalty": "l2",
+      "pca__n_components": null
+    }
+  },
+  "cv_scores": {
+    "case_csPCa_binary": {
+      "mean": 0.755616448536033,
+      "std": 0.033415586472033486
+    }
+  },
+  "thresholds": {
+    "case_csPCa_binary": 0.5199999999999998
+  },
+  "train_size": 1032,
+  "val_size": 222,
+  "test_size": 222,
+  "trainval_size": 1254,
+  "feature_dim": 1152,
+  "modalities": [
+    "hbv",
+    "adc",
+    "hbv"
+  ],
+  "feature_dirs": {
+    "t2w": "/mnt/data9/projects/medgemma_challenge/medsiglib/checkpoints/features_slice_t2w",
+    "adc": "/mnt/data9/projects/medgemma_challenge/medsiglib/checkpoints/features_slice_adc",
+    "hbv": "/mnt/data9/projects/medgemma_challenge/medsiglib/checkpoints/features_slice_hbv"
+  },
+  "slice_pooling": "gaussian",
+  "slice_gaussian_sigma": 2,
+  "modality_aggregation": "mean",
+  "normalize_features": true,
+  "slice_pca_explained_variance": null
+}
