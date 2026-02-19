@@ -133,19 +133,19 @@ A `ThreadingHTTPServer` hosting `google/medgemma-1.5-4b-it`. Key design decision
 
 The imaging panel shows all three mpMRI modalities alongside the exact model input (HBV|ADC|HBV concatenated after seg-based prostate crop). Clicking **▶ Run MedSigLIP Classifier** calls the classifier API and populates the predictions panel with the csPCa probability, binary classification, PSA density, and 5-fold uncertainty metrics.
 
-![MedSigLIP Image Classifier](dist/imgs/medsiglip%20image%20classifier.png)
+![MedSigLIP Image Classifier](public/imgs/medsiglip%20image%20classifier.png)
 
 ### 4.2 MedGemma Treatment Recommendation Engine
 
 After the clinician fills in the staging, PSA, comorbidities, and patient preferences and presses **Get Recommendation**, MedGemma generates a personalised ranked list of treatment options. Each option includes a PDQ-cited rationale and a practical description. The options are rendered as collapsible cards.
 
-![MedGemma Treatment Recommendation Engine](dist/imgs/medgemma%20TRE.png)
+![MedGemma Treatment Recommendation Engine](public/imgs/medgemma%20TRE.png)
 
 ### 4.3 MedGemma Clinical Assistant Chatbot
 
 The assistant panel provides a free-form conversational interface grounded on the full patient context (form fields, AI prediction, recommendation already generated). Clinicians can ask follow-up questions such as *"What is the expected continence recovery after prostatectomy for this patient?"* and receive contextualised, markdown-formatted responses.
 
-![MedGemma Clinical Assistant Chatbot](dist/imgs/medgemma%20charbot.png)
+![MedGemma Clinical Assistant Chatbot](public/imgs/medgemma%20charbot.png)
 
 ---
 
