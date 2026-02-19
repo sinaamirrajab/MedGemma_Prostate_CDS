@@ -14,12 +14,14 @@ export default function ClinicalInputsPanel({
   onSubmit,
   psaDensity,
   predictedProstateVolumeMl,
+  onSaveCsv,
+  patientId,
 }) {
   return (
     <section className="card form">
       <div className="card-header">
         <h2>Clinical Inputs</h2>
-        <p>Holistic history, comorbidity, and preference capture.</p>
+        <p>Capture TNM staging and key variables for patient {patientId ?? "N/A"}.</p>
       </div>
       <form onSubmit={onSubmit} className="input-grid">
         <div className="form-section">
@@ -194,6 +196,9 @@ export default function ClinicalInputsPanel({
 
         <button className="primary-btn" type="submit">
           Generate Recommendation
+        </button>
+        <button className="ghost-btn secondary-btn" type="button" onClick={onSaveCsv}>
+          Save
         </button>
       </form>
     </section>

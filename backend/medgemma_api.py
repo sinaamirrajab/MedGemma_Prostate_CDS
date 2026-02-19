@@ -626,11 +626,18 @@ def _looks_like_internal_reasoning(text: str) -> bool:
     lowered = candidate.lower()
     if "<unused" in lowered:
         return True
-    if re.match(r"^\s*(thought|analysis|reasoning)\b", lowered):
+    if "<thought>" in lowered or "<response>" in lowered:
+        return True
+    if re.match(r"^\s*(thought|analysis|reasoning|plan)\b", lowered):
         return True
     if "the user is asking" in lowered and re.search(r"\b1\.\s", candidate):
         return True
+    if "the user wants me to" in lowered:
+        return True
     if "identify the core concept" in lowered or "recall/search" in lowered:
+        return True
+    # Heuristic: numbered planning steps at the start = internal reasoning
+    if re.match(r"^\s*1\.\s+\*{0,2}(identify|define|recall|locate|extract|determine)", lowered):
         return True
     return False
 
@@ -639,18 +646,43 @@ def _sanitize_chat_response(text: str) -> str:
     cleaned = (text or "").strip()
     if not cleaned:
         return ""
-    cleaned = re.sub(r"<unused\d+>", "", cleaned, flags=re.IGNORECASE).strip()
+
+    # The model uses <unusedN> as structural tokens:
+    #   <unused94> = "begin thinking"  |  <unused95> = "begin response"
+    # Take everything after the LAST <unusedN> tag; that is the actual reply.
+    last_unused_match = None
+    for m in re.finditer(r"<unused\d+>", cleaned, flags=re.IGNORECASE):
+        last_unused_match = m
+    if last_unused_match:
+        after = cleaned[last_unused_match.end():].strip()
+        if after:  # non-empty reply follows the last token
+            cleaned = after
+        else:
+            # Nothing after the last token; strip ALL <unusedN> tags and fall through
+            cleaned = re.sub(r"<unused\d+>", "", cleaned, flags=re.IGNORECASE).strip()
+
+    # Strip <thought>...</thought> blocks entirely (keep nothing inside)
+    cleaned = re.sub(r"(?is)<thought>.*?</thought>", "", cleaned).strip()
+
+    # Unwrap <response>...</response>, keeping only inner content
+    response_block = re.search(r"(?is)<response>(.*?)</response>", cleaned)
+    if response_block:
+        cleaned = response_block.group(1).strip()
+    else:
+        # No closing tag: take everything after an opening <response>
+        response_open = re.search(r"(?is)<response>", cleaned)
+        if response_open:
+            cleaned = cleaned[response_open.end():].strip()
+
+    # Remove any residual <...> tags (safety net)
+    cleaned = re.sub(r"<[^>]{1,40}>", "", cleaned).strip()
+
+    # Strip leading role labels that models sometimes emit
     cleaned = re.sub(r"^\s*assistant\s*:\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    cleaned = re.sub(r"^\s*thought\b\s*[:\-]?\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    cleaned = re.sub(r"^\s*internal reasoning\b\s*[:\-]?\s*", "", cleaned, flags=re.IGNORECASE).strip()
 
-    final_marker = re.search(
-        r"(?is)(?:final answer|answer to (?:the )?user|response)\s*[:\-]\s*(.+)$",
-        cleaned,
-    )
-    if final_marker:
-        cleaned = final_marker.group(1).strip()
-
-    cleaned = re.sub(r"(?is)^\s*thought\b\s*[:\-]?\s*", "", cleaned).strip()
-    cleaned = re.sub(r"(?is)^\s*internal reasoning\b\s*[:\-]?\s*", "", cleaned).strip()
+    # Collapse excessive blank lines
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned).strip()
     return cleaned
 
