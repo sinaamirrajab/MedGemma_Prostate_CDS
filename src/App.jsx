@@ -10,6 +10,7 @@ import RecommendationPanel from "./components/RecommendationPanel";
 import TopBar from "./components/TopBar";
 import { initialForm } from "./data/initialForm";
 import { loadPatientsFromCsv, serializeCsv } from "./data/patientCsv";
+import { openCaseReportPdf } from "./utils/reportPdf";
 
 // Map: form field name → CSV column name (covers ALL UI inputs)
 const FIELD_TO_CSV = {
@@ -211,6 +212,16 @@ export default function App() {
     csPcaDefinition:
       "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2).",
   };
+  const persistedRecommendation = useMemo(() => {
+    const raw = currentPatient?.ui_recommendation;
+    if (!raw) return null;
+    if (typeof raw === "object") return raw;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }, [currentPatient]);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -373,9 +384,22 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
+  const handleExportReport = () => {
+    const reportResult = openCaseReportPdf({
+      patientId: currentPatient?.patient_id,
+      patient: casePatient,
+      modelPrediction: caseModelPrediction,
+      classifierResult,
+      recommendation: result || persistedRecommendation,
+    });
+    if (!reportResult.ok) {
+      setError(`Report generation failed: ${reportResult.error}`);
+    }
+  };
+
   return (
     <div className="page">
-      <TopBar />
+      <TopBar onExportReport={handleExportReport} isReportDisabled={!currentPatient} />
       <HeroSection />
 
       <main className="grid">

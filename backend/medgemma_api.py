@@ -130,6 +130,16 @@ def _tokenize(text: str) -> list[str]:
     return re.findall(r"[a-zA-Z0-9]+", (text or "").lower())
 
 
+def _strip_pdq_page_citations(text: str) -> str:
+    cleaned = str(text or "")
+    cleaned = re.sub(r"\[\s*PDQ\s*p\.\s*\d+\s*\]", "", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\bPDQ\s*p\.\s*\d+\b", "PDQ", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s+([,.;:])", r"\1", cleaned)
+    cleaned = re.sub(r"[ \t]{2,}", " ", cleaned)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+
 def _append_prompt_log(kind: str, prompt: str) -> None:
     try:
         log_dir = os.path.dirname(PROMPT_LOG_PATH)
@@ -471,7 +481,7 @@ def _retrieve_rag_context(patient: dict[str, Any], model_prediction: dict[str, A
     context_lines = []
     for chunk in top_chunks:
         cleaned = re.sub(r"\s+", " ", chunk["text"]).strip()
-        context_lines.append(f"[PDQ p.{chunk['page']}] {cleaned}")
+        context_lines.append(f"[PDQ] {cleaned}")
     return "\n".join(context_lines)
 
 
@@ -520,8 +530,12 @@ def _normalize_recommendation_payload(payload: dict[str, Any]) -> dict[str, Any]
         if not isinstance(option, dict):
             raise ValueError("Each option must be an object with title/reasoning/description.")
         title = str(option.get("title", "")).strip()
-        rationale = str(option.get("reasoning") or option.get("rationale") or "").strip()
-        details = str(option.get("description") or option.get("details") or "").strip()
+        rationale = _strip_pdq_page_citations(
+            str(option.get("reasoning") or option.get("rationale") or "").strip()
+        )
+        details = _strip_pdq_page_citations(
+            str(option.get("description") or option.get("details") or "").strip()
+        )
         if not title:
             raise ValueError("Option is missing title.")
         normalized_options.append(
@@ -534,11 +548,13 @@ def _normalize_recommendation_payload(payload: dict[str, Any]) -> dict[str, Any]
             }
         )
 
-    payload["summary"] = str(payload["summary"]).strip()
-    payload["fullDetails"] = str(payload.get("fullDetails", payload["summary"])).strip()
+    payload["summary"] = _strip_pdq_page_citations(str(payload["summary"]).strip())
+    payload["fullDetails"] = _strip_pdq_page_citations(
+        str(payload.get("fullDetails", payload["summary"])).strip()
+    )
     payload["options"] = normalized_options
     payload["structuredDetails"] = {}
-    payload["note"] = str(payload.get("note", "")).strip()
+    payload["note"] = _strip_pdq_page_citations(str(payload.get("note", "")).strip())
     payload["from_medgemma"] = True
     payload["rag_used"] = True
     return payload
@@ -573,17 +589,17 @@ Required JSON schema:
   "options": [
     {{
       "title": "treatment option name",
-      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "reasoning": "why this option fits this patient, personalized to inputs and PDQ evidence",
       "description": "what the treatment involves, expected benefits/risks, and practical considerations"
     }},
     {{
       "title": "second option",
-      "reasoning": "patient-specific reasoning with PDQ citations",
+      "reasoning": "patient-specific reasoning grounded in PDQ evidence",
       "description": "treatment description"
     }},
     {{
       "title": "third option",
-      "reasoning": "patient-specific reasoning with PDQ citations",
+      "reasoning": "patient-specific reasoning grounded in PDQ evidence",
       "description": "treatment description"
     }}
   ],
@@ -595,6 +611,7 @@ Rules:
 - Keep each option's reasoning and description concise (about 2-4 sentences each).
 - End only after a complete JSON object (all quotes/braces closed).
 - If evidence is uncertain, state uncertainty in reasoning.
+- Do not include page-number citations such as PDQ p.74 or [PDQ p.74].
 
 PDQ RAG context:
 {rag_context}
@@ -684,7 +701,7 @@ def _sanitize_chat_response(text: str) -> str:
 
     # Collapse excessive blank lines
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned).strip()
-    return cleaned
+    return _strip_pdq_page_citations(cleaned)
 
 
 def _build_chat_cleanup_prompt(user_message: str, raw_response: str) -> str:
@@ -754,7 +771,7 @@ Conversation history:
 PDQ RAG context:
 {rag_context}
 
-You may cite PDQ evidence with [PDQ p.X] when relevant.
+Use PDQ evidence when relevant, but do not include page-number citations.
 Answer naturally and clinically.
 Use readable markdown formatting (short sections and bullet points when helpful).
 Do not include internal reasoning text, planning traces, or tags like <unused...> or "thought".

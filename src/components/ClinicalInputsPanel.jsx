@@ -30,6 +30,7 @@ export default function ClinicalInputsPanel({
             <label>
               cT stage
               <select name="tStage" value={form.tStage} onChange={onChange}>
+                <option>T0</option>
                 <option>T1</option>
                 <option>T2</option>
                 <option>T3</option>

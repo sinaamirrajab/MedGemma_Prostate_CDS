@@ -1,4 +1,4 @@
-export default function TopBar() {
+export default function TopBar({ onExportReport, isReportDisabled = false }) {
   return (
     <header className="topbar">
       <div className="brand">
@@ -8,9 +8,16 @@ export default function TopBar() {
           <p className="brand-subtitle">Precision Medicine Maastricht University</p>
         </div>
       </div>
-      {/* <button className="ghost-btn" type="button">
-        Export Report
-      </button> */}
+      <div className="topbar-actions">
+        <button
+          className="ghost-btn"
+          type="button"
+          onClick={onExportReport}
+          disabled={isReportDisabled}
+        >
+          Generate PDF report
+        </button>
+      </div>
     </header>
   );
 }
