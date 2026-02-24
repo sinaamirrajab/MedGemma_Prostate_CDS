@@ -12,6 +12,27 @@ import { initialForm } from "./data/initialForm";
 import { loadPatientsFromCsv, serializeCsv } from "./data/patientCsv";
 import { openCaseReportPdf } from "./utils/reportPdf";
 
+const API_ERROR_MESSAGES = {
+  INVALID_JSON_BODY: "Invalid request format.",
+  VALIDATION_ERROR: "Some required fields are missing or invalid.",
+  FILE_NOT_ALLOWED: "Selected files are outside allowed project folders.",
+  FILE_NOT_FOUND: "One or more input files could not be found.",
+  MODEL_OUTPUT_PARSE_ERROR: "Model returned malformed output. Please retry.",
+  MODEL_GENERATION_ERROR: "Model generation failed. Please retry in a moment.",
+  INTERNAL_ERROR: "Server error. Please check backend logs.",
+  UNKNOWN_PATH: "API route not found.",
+};
+
+function formatApiError(payload, fallback) {
+  const code = payload?.error_code;
+  const mapped = code ? API_ERROR_MESSAGES[code] : "";
+  const detail = typeof payload?.error === "string" ? payload.error : "";
+  if (mapped && detail && detail !== mapped) return `${mapped} (${detail})`;
+  if (mapped) return mapped;
+  if (detail) return detail;
+  return fallback;
+}
+
 // Map: form field name → CSV column name (covers ALL UI inputs)
 const FIELD_TO_CSV = {
   tStage: "clinical_t_stage",
@@ -184,7 +205,6 @@ export default function App() {
       }
     : null;
 
-  const csvProbability = Number.parseFloat(currentPatient?.case_csPCa_binary);
   const csvVolume = Number.parseFloat(currentPatient?.prostate_volume);
   const modelPrediction = {
     // null until the classifier has been run for this patient
@@ -262,7 +282,7 @@ export default function App() {
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setClassifierError(payload?.error || `Classifier failed: ${response.status}`);
+        setClassifierError(formatApiError(payload, `Classifier failed: ${response.status}`));
         return;
       }
       // Persist classifier results into the patient row (auto-saved to localStorage + CSV)
@@ -304,7 +324,7 @@ export default function App() {
 
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        const reason = payload?.error || `API request failed: ${response.status}`;
+        const reason = formatApiError(payload, `API request failed: ${response.status}`);
         if (payload?.parse_error && typeof payload?.rawOutput === "string" && payload.rawOutput.trim()) {
           setResult({
             parseError: true,
@@ -414,7 +434,6 @@ export default function App() {
         />
         <ModelPredictionsPanel
           modelPrediction={modelPrediction}
-          csPcaPrediction={csPcaPrediction}
           psaDensity={psaDensity}
           classifierResult={classifierResult}
           isClassifying={isClassifying}

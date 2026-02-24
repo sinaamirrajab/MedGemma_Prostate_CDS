@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "classifier_predict.request.schema.json",
+  "title": "Classifier Predict Request",
+  "type": "object",
+  "required": ["t2w", "adc", "hbv"],
+  "properties": {
+    "patient_id": { "type": "string" },
+    "t2w": { "type": "string", "minLength": 1 },
+    "adc": { "type": "string", "minLength": 1 },
+    "hbv": { "type": "string", "minLength": 1 },
+    "seg": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "error.response.schema.json",
+  "title": "API Error Response",
+  "type": "object",
+  "required": ["error_code", "error"],
+  "properties": {
+    "error_code": { "type": "string" },
+    "error": { "type": "string" },
+    "details": { "type": "object" }
+  },
+  "additionalProperties": true
+}

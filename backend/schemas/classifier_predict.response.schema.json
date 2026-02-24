@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "classifier_predict.response.schema.json",
+  "title": "Classifier Predict Response",
+  "type": "object",
+  "required": ["patient_id", "csPC_probability", "csPC_prediction", "threshold_used"],
+  "properties": {
+    "patient_id": { "type": "string" },
+    "csPC_probability": { "type": "number" },
+    "csPC_prediction": { "type": "integer", "enum": [0, 1] },
+    "threshold_used": { "type": "number" },
+    "fold_probabilities": { "type": "array", "items": { "type": "number" } },
+    "uncertainty_std": { "type": "number" },
+    "uncertainty_entropy": { "type": "number" },
+    "uncertainty_disagreement": { "type": "number" },
+    "uncertainty_ci_width": { "type": "number" },
+    "uncertainty_ci_lo": { "type": "number" },
+    "uncertainty_ci_hi": { "type": "number" }
+  },
+  "additionalProperties": true
+}

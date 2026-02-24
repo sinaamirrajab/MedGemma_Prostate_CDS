@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "medgemma_chat.request.schema.json",
+  "title": "MedGemma Chat Request",
+  "type": "object",
+  "required": ["message"],
+  "properties": {
+    "message": { "type": "string", "minLength": 1 },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "content"],
+        "properties": {
+          "role": { "type": "string", "enum": ["user", "assistant"] },
+          "content": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "patient": { "type": "object" },
+    "modelPrediction": { "type": "object" },
+    "recommendation": { "type": "object" }
+  },
+  "additionalProperties": true
+}

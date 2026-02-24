@@ -87,7 +87,7 @@ The UI is built with React 19 and bundled by Vite 7. It consists of six panels a
 
 The `ClinicalAssistantPanel` is force-remounted with `key={patientIndex}` to prevent chat history from leaking between patients.
 
-**Volume viewing** uses [NiiVue](https://github.com/niivue/niivue). All four panels stream `.mha` / `.nii.gz` volumes directly from the Vite dev server filesystem; Vite's `fs.strict: false` setting enables serving volumes from absolute paths on disk. The fourth panel shows the exact MedSigLIP model input (HBV|ADC|HBV concatenated side-by-side, seg-cropped, normalised) generated offline and stored as `.nii.gz` per patient.
+**Volume viewing** uses [NiiVue](https://github.com/niivue/niivue). All four panels stream `.mha` / `.nii.gz` volumes via Vite with strict filesystem allowlisting (`server.fs.strict: true`) and explicit roots from `VITE_ALLOWED_FILE_ROOTS`. Absolute-path to viewer URL conversion is driven by env (`VITE_PROJECT_ROOT`, optional `VITE_ADDITIONAL_VIEWER_ROOT`) instead of hardcoded paths. The fourth panel shows the exact MedSigLIP model input (HBV|ADC|HBV concatenated side-by-side, seg-cropped, normalised) generated offline and stored as `.nii.gz` per patient.
 
 ### 5.2 MedSigLIP Classifier Backend (`classifier_api.py`, port 8001)
 
@@ -117,6 +117,11 @@ A pure-Python `ThreadingHTTPServer` wrapping the following pipeline:
 - `POST /api/classifier/predict` — single patient (JSON body with file paths)
 - `POST /api/classifier/predict_csv` — batch run over the configured CSV
 
+**Request safety and validation**:
+- `classifier_api.py` validates request body shape and required fields before inference.
+- `t2w`, `adc`, `hbv`, `seg` and `csv_path` are checked as absolute local paths inside `CLASSIFIER_ALLOWED_ROOTS`.
+- Structured error responses include `error_code`, `error`, and optional `details`.
+
 ### 5.3 MedGemma Recommendation Backend (`medgemma_api.py`, port 8000)
 
 A `ThreadingHTTPServer` hosting `google/medgemma-1.5-4b-it`. Key design decisions:
@@ -124,19 +129,6 @@ A `ThreadingHTTPServer` hosting `google/medgemma-1.5-4b-it`. Key design decision
 **RAG over PDQ guidelines**: The NCI PDQ® prostate cancer treatment document is chunked (900-token chunks, 160-token overlap) at startup. At inference time, a BM25-style term-overlap retrieval selects the top-4 most relevant chunks given the patient's staging, PSA, and predicted risk. These are injected into the prompt as `[PDQ p.X]` citations.
 
 **Structured prompt**: The LLM receives a strict instruction to return only a JSON object matching a schema with `summary`, `options[].title`, `options[].reasoning`, and `options[].description`. A robust JSON extractor handles code-fenced output, trailing commas, and newlines inside strings.
-
-**Retry logic**: If generation exceeds the context budget or produces malformed JSON, the API retries with an increased token budget.
-
-**GPU routing**: The backend detects available CUDA GPUs, tracks failures, and automatically routes to the next available device on CUDA assertion errors.
-
-**Endpoints**:
-- `GET /api/medgemma/recommend` — treatment recommendation (structured JSON)
-- `POST /api/medgemma/chat` — multi-turn clinical assistant chat, grounded on the active patient record and current recommendation
-
----
-
-
-
 
 ## 7. Reproducibility & Running the System
 
@@ -148,6 +140,9 @@ A `ThreadingHTTPServer` hosting `google/medgemma-1.5-4b-it`. Key design decision
 
 ### Startup
 ```bash
+# Optional: copy and edit environment defaults
+cp .env.example .env
+
 # 1. MedGemma recommendation API (port 8000)
 nohup python \
   /path/to/cds/backend/medgemma_api.py > /tmp/medgemma_api.log 2>&1 &
@@ -161,6 +156,7 @@ nohup /mnt/data9/conda/medgemma/bin/python classifier_api.py \
 # 3. Vite dev server (port 5173)
 cd /path/to/cds
 npm install
+npm test
 npm run dev -- --host 0.0.0.0 --port 5173
 ```
 

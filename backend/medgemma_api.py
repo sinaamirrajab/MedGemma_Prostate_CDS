@@ -126,6 +126,21 @@ class RecommendationParseError(RuntimeError):
         self.raw_output = raw_output
 
 
+class ApiError(RuntimeError):
+    def __init__(
+        self,
+        status: int,
+        code: str,
+        message: str,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.status = status
+        self.code = code
+        self.message = message
+        self.details = details or {}
+
+
 def _tokenize(text: str) -> list[str]:
     return re.findall(r"[a-zA-Z0-9]+", (text or "").lower())
 
@@ -1131,6 +1146,68 @@ def _fallback_chat_response(
     )
 
 
+def _validate_json_object(body: Any, field_name: str = "body") -> dict[str, Any]:
+    if not isinstance(body, dict):
+        raise ApiError(
+            400,
+            "INVALID_JSON_BODY",
+            f"Request {field_name} must be a JSON object.",
+        )
+    return body
+
+
+def _validate_dict_field(body: dict[str, Any], field_name: str) -> dict[str, Any]:
+    value = body.get(field_name)
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise ApiError(
+            422,
+            "VALIDATION_ERROR",
+            f"Field '{field_name}' must be an object.",
+            {"field": field_name},
+        )
+    return value
+
+
+def _validate_messages(value: Any) -> list[dict[str, str]]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise ApiError(422, "VALIDATION_ERROR", "Field 'messages' must be an array.", {"field": "messages"})
+    cleaned: list[dict[str, str]] = []
+    for idx, item in enumerate(value):
+        if not isinstance(item, dict):
+            raise ApiError(
+                422,
+                "VALIDATION_ERROR",
+                "Each message must be an object with 'role' and 'content'.",
+                {"field": "messages", "index": idx},
+            )
+        role = str(item.get("role", "")).strip().lower()
+        content = str(item.get("content", "")).strip()
+        if role not in ("user", "assistant") or not content:
+            raise ApiError(
+                422,
+                "VALIDATION_ERROR",
+                "Each message must include valid 'role' and non-empty 'content'.",
+                {"field": "messages", "index": idx},
+            )
+        cleaned.append({"role": role, "content": content})
+    return cleaned
+
+
+def _validate_common_payload(body: Any) -> dict[str, Any]:
+    payload = _validate_json_object(body)
+    return {
+        "patient": _validate_dict_field(payload, "patient"),
+        "modelPrediction": _validate_dict_field(payload, "modelPrediction"),
+        "recommendation": _validate_dict_field(payload, "recommendation"),
+        "messages": _validate_messages(payload.get("messages")),
+        "message": str(payload.get("message", "")).strip(),
+    }
+
+
 class MedGemmaHandler(BaseHTTPRequestHandler):
     def _write_json(self, code: int, body: dict[str, Any]) -> None:
         payload = json.dumps(body).encode("utf-8")
@@ -1150,19 +1227,24 @@ class MedGemmaHandler(BaseHTTPRequestHandler):
         if self.path == "/health":
             self._write_json(200, {"ok": True, "model_id": MODEL_ID})
             return
-        self._write_json(404, {"error": "Not found"})
+        self._write_json(404, {"error_code": "UNKNOWN_PATH", "error": "Not found"})
 
     def do_POST(self) -> None:  # noqa: N802
         if self.path not in ("/api/medgemma/recommend", "/api/medgemma/chat"):
-            self._write_json(404, {"error": "Not found"})
+            self._write_json(404, {"error_code": "UNKNOWN_PATH", "error": "Not found"})
             return
 
         try:
             content_length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(content_length)
-            body = json.loads(raw.decode("utf-8")) if raw else {}
-            patient = body.get("patient") or {}
-            model_prediction = body.get("modelPrediction") or {}
+            try:
+                body = json.loads(raw.decode("utf-8")) if raw else {}
+            except json.JSONDecodeError as exc:
+                raise ApiError(400, "INVALID_JSON_BODY", "Request body is not valid JSON.") from exc
+
+            payload = _validate_common_payload(body)
+            patient = payload["patient"]
+            model_prediction = payload["modelPrediction"]
             rag_context = _retrieve_rag_context(patient, model_prediction)
 
             if self.path == "/api/medgemma/recommend":
@@ -1174,6 +1256,7 @@ class MedGemmaHandler(BaseHTTPRequestHandler):
                     self._write_json(
                         422,
                         {
+                            "error_code": "MODEL_OUTPUT_PARSE_ERROR",
                             "error": str(exc),
                             "parse_error": True,
                             "rawOutput": exc.raw_output,
@@ -1189,6 +1272,7 @@ class MedGemmaHandler(BaseHTTPRequestHandler):
                     self._write_json(
                         502,
                         {
+                            "error_code": "MODEL_GENERATION_ERROR",
                             "error": str(exc),
                             "from_medgemma": False,
                             "rag_used": bool(
@@ -1200,12 +1284,11 @@ class MedGemmaHandler(BaseHTTPRequestHandler):
                 self._write_json(200, recommendation)
                 return
 
-            messages = body.get("messages") or []
-            user_message = (body.get("message") or "").strip()
-            recommendation = body.get("recommendation") or {}
+            messages = payload["messages"]
+            user_message = payload["message"]
+            recommendation = payload["recommendation"]
             if not user_message:
-                self._write_json(400, {"error": "message is required"})
-                return
+                raise ApiError(422, "VALIDATION_ERROR", "Field 'message' is required.", {"field": "message"})
             try:
                 response = _generate_chat_response(
                     patient,
@@ -1223,8 +1306,13 @@ class MedGemmaHandler(BaseHTTPRequestHandler):
                 LOGGER.exception("Chat generation failed: %s", exc)
                 response = _fallback_chat_response(patient, recommendation, user_message)
             self._write_json(200, {"reply": response})
+        except ApiError as exc:
+            self._write_json(
+                exc.status,
+                {"error_code": exc.code, "error": exc.message, "details": exc.details},
+            )
         except Exception as exc:
-            self._write_json(400, {"error": str(exc)})
+            self._write_json(500, {"error_code": "INTERNAL_ERROR", "error": "Internal server error."})
 
 
 def main() -> None:

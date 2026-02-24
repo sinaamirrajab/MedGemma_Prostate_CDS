@@ -1,3 +1,5 @@
+import { cleanText, normalizeRecommendation } from "./recommendation";
+
 const PAGE_WIDTH = 595.28; // A4 portrait width in points
 const PAGE_HEIGHT = 841.89; // A4 portrait height in points
 const MARGIN_X = 44;
@@ -7,18 +9,6 @@ const CONTENT_WIDTH = PAGE_WIDTH - MARGIN_X * 2;
 
 const FONT_REGULAR = "F1";
 const FONT_BOLD = "F2";
-
-const stripCodeFences = (value) =>
-  String(value ?? "")
-    .replace(/```json/gi, "")
-    .replace(/```/g, "")
-    .trim();
-
-const cleanText = (value, fallback = "") => {
-  if (value === undefined || value === null) return fallback;
-  const normalized = stripCodeFences(value).replace(/\s+/g, " ").trim();
-  return normalized || fallback;
-};
 
 const formatPercent = (value) =>
   Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "Not available";
@@ -61,7 +51,7 @@ const splitLongWord = (word, maxWidth, fontSize) => {
 };
 
 const wrapText = (text, maxWidth, fontSize) => {
-  const normalized = cleanText(text);
+  const normalized = cleanText(text).replace(/\s+/g, " ").trim();
   if (!normalized) return [];
   const words = normalized.split(" ");
   const lines = [];
@@ -285,69 +275,6 @@ class PdfComposer {
   }
 }
 
-const parseRecommendation = (recommendation) => {
-  if (!recommendation) return null;
-  if (typeof recommendation === "object") return recommendation;
-  if (typeof recommendation !== "string") return null;
-  try {
-    const parsed = JSON.parse(recommendation);
-    return parsed && typeof parsed === "object" ? parsed : null;
-  } catch {
-    return {
-      summary: cleanText(recommendation, "Recommendation text was not JSON formatted."),
-      options: [],
-      note: "",
-    };
-  }
-};
-
-const normalizeRecommendation = (recommendation) => {
-  const parsed = parseRecommendation(recommendation);
-  if (!parsed) {
-    return {
-      parseError: false,
-      summary: "No recommendation generated yet.",
-      fullDetails: "No detailed recommendation generated yet.",
-      options: [],
-      note: "",
-      rawOutput: "",
-    };
-  }
-
-  const options = Array.isArray(parsed.options)
-    ? parsed.options
-        .slice(0, 3)
-        .map((option, index) => {
-          if (typeof option === "string") {
-            return {
-              title: cleanText(option, `Option ${index + 1}`),
-              reasoning: "",
-              description: "",
-            };
-          }
-          if (!option || typeof option !== "object") return null;
-          return {
-            title: cleanText(option.title || option.name, `Option ${index + 1}`),
-            reasoning: cleanText(option.reasoning || option.rationale),
-            description: cleanText(option.description || option.details),
-          };
-        })
-        .filter(Boolean)
-    : [];
-
-  return {
-    parseError: Boolean(parsed.parseError),
-    summary: cleanText(parsed.summary, "No recommendation summary available."),
-    fullDetails: cleanText(
-      parsed.fullDetails || parsed.summary,
-      "No detailed recommendation available."
-    ),
-    options,
-    note: cleanText(parsed.note),
-    rawOutput: cleanText(parsed.rawOutput || parsed.fullDetails),
-  };
-};
-
 const buildPdf = (pageStreams) => {
   const objects = [];
   const addObject = (body) => {
@@ -414,7 +341,14 @@ export function openCaseReportPdf({
   recommendation,
 }) {
   try {
-    const recommendationView = normalizeRecommendation(recommendation);
+    const recommendationView = normalizeRecommendation(recommendation) || {
+      parseError: false,
+      summary: "No recommendation generated yet.",
+      fullDetails: "No detailed recommendation generated yet.",
+      options: [],
+      note: "",
+      rawOutput: "",
+    };
     const generatedAt = new Date().toLocaleString();
     const comorbidities = Array.isArray(patient?.comorbidities) ? patient.comorbidities : [];
     const tStage = cleanText(patient?.tStage, "N/A");

@@ -1,6 +1,5 @@
 export default function ModelPredictionsPanel({
   modelPrediction,
-  csPcaPrediction,
   psaDensity,
   classifierResult,
   isClassifying,
@@ -110,4 +109,3 @@ export default function ModelPredictionsPanel({
     </section>
   );
 }
-

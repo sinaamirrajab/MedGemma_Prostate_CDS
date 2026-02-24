@@ -26,7 +26,7 @@ function markdownToHtml(text) {
   let listType = null;
 
   for (const raw of lines) {
-    const bulletMatch = raw.match(/^\s*[\*\-]\s+(.*)/);
+    const bulletMatch = raw.match(/^\s*[*-]\s+(.*)/);
     const numberedMatch = raw.match(/^\s*\d+\.\s+(.*)/);
     if (bulletMatch) {
       if (!inList || listType !== "ul") {
@@ -132,7 +132,6 @@ export default function ClinicalAssistantPanel({
                 {message.role === "assistant" ? (
                   <div
                     className="chat-markdown"
-                    // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{ __html: markdownToHtml(message.content) }}
                   />
                 ) : (

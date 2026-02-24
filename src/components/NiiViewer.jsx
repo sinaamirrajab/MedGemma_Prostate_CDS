@@ -7,28 +7,26 @@ export default function NiiViewer({ title, subtitle, url }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Reset state whenever the url changes
-    setStatus("loading");
-    setError("");
-
-    // Nothing to load — show placeholder immediately
-    if (!url) {
-      setStatus("error");
-      setError("");
-      return;
-    }
-
-    // Canvas not mounted yet (should not happen, but guard anyway)
-    if (!canvasRef.current) {
-      setStatus("error");
-      setError("Canvas not available");
-      return;
-    }
-
     let active = true;
     const nv = new Niivue();
 
     const init = async () => {
+      setStatus("loading");
+      setError("");
+
+      // Nothing to load — show placeholder immediately
+      if (!url) {
+        setStatus("error");
+        return;
+      }
+
+      // Canvas not mounted yet (should not happen, but guard anyway)
+      if (!canvasRef.current) {
+        setStatus("error");
+        setError("Canvas not available");
+        return;
+      }
+
       try {
         await nv.attachToCanvas(canvasRef.current);
         await nv.loadVolumes([

@@ -53,6 +53,21 @@ logging.basicConfig(
 )
 LOGGER = logging.getLogger("classifier_api")
 
+
+class ApiError(RuntimeError):
+    def __init__(
+        self,
+        status: int,
+        code: str,
+        message: str,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.status = status
+        self.code = code
+        self.message = message
+        self.details = details or {}
+
 # ---------------------------------------------------------------------------
 # Load model config + ensemble at startup
 # ---------------------------------------------------------------------------
@@ -84,6 +99,14 @@ _SIGMA             = MODEL_CFG["slice_gaussian_sigma"]        # int or None
 _NORMALIZE         = MODEL_CFG["normalize_features"]          # bool
 _THRESHOLD         = MODEL_CFG["thresholds"][LABEL_COL]       # float
 _FEATURE_DIRS      = MODEL_CFG["feature_dirs"]                # dict modality->dir
+
+_PROJECT_ROOT = Path(__file__).resolve().parents[1]
+_DEFAULT_ALLOWED_ROOTS = [_PROJECT_ROOT, Path("/tmp")]
+_RAW_ALLOWED_ROOTS = os.environ.get(
+    "CLASSIFIER_ALLOWED_ROOTS",
+    os.pathsep.join(str(p) for p in _DEFAULT_ALLOWED_ROOTS),
+)
+ALLOWED_FILE_ROOTS = [Path(p).expanduser().resolve() for p in _RAW_ALLOWED_ROOTS.split(os.pathsep) if p.strip()]
 
 # ---------------------------------------------------------------------------
 # Feature extraction helpers  (adapted from medsiglip_multislice_classification_crop_fast_save.py)
@@ -460,6 +483,107 @@ def run_csv_pipeline(csv_path: str | Path) -> pd.DataFrame:
     return merged
 
 
+def _validate_json_object(value: Any, error_code: str = "INVALID_JSON_BODY") -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ApiError(400, error_code, "Request body must be a JSON object.")
+    return value
+
+
+def _validate_required_string(body: dict[str, Any], key: str) -> str:
+    value = body.get(key)
+    if not isinstance(value, str) or not value.strip():
+        raise ApiError(
+            422,
+            "VALIDATION_ERROR",
+            f"Missing required field '{key}' (non-empty string).",
+            {"field": key},
+        )
+    return value.strip()
+
+
+def _is_within_allowed_roots(path: Path, allowed_roots: list[Path]) -> bool:
+    for root in allowed_roots:
+        try:
+            path.relative_to(root)
+            return True
+        except ValueError:
+            continue
+    return False
+
+
+def _validate_local_file_path(path_value: str, field_name: str) -> str:
+    candidate = Path(path_value).expanduser()
+    try:
+        resolved = candidate.resolve(strict=False)
+    except Exception as exc:
+        raise ApiError(
+            422,
+            "VALIDATION_ERROR",
+            f"Invalid path in field '{field_name}'.",
+            {"field": field_name, "path": path_value, "reason": str(exc)},
+        ) from exc
+
+    if not resolved.is_absolute():
+        raise ApiError(
+            422,
+            "VALIDATION_ERROR",
+            f"Field '{field_name}' must be an absolute local path.",
+            {"field": field_name, "path": path_value},
+        )
+
+    if not _is_within_allowed_roots(resolved, ALLOWED_FILE_ROOTS):
+        raise ApiError(
+            403,
+            "FILE_NOT_ALLOWED",
+            f"Path in field '{field_name}' is outside allowed roots.",
+            {
+                "field": field_name,
+                "path": str(resolved),
+                "allowed_roots": [str(root) for root in ALLOWED_FILE_ROOTS],
+            },
+        )
+
+    if not resolved.exists():
+        raise ApiError(
+            422,
+            "FILE_NOT_FOUND",
+            f"File in field '{field_name}' does not exist.",
+            {"field": field_name, "path": str(resolved)},
+        )
+
+    return str(resolved)
+
+
+def _validate_predict_payload(body: Any) -> dict[str, Any]:
+    payload = _validate_json_object(body)
+    t2w = _validate_local_file_path(_validate_required_string(payload, "t2w"), "t2w")
+    adc = _validate_local_file_path(_validate_required_string(payload, "adc"), "adc")
+    hbv = _validate_local_file_path(_validate_required_string(payload, "hbv"), "hbv")
+
+    seg_raw = payload.get("seg")
+    seg = ""
+    if isinstance(seg_raw, str) and seg_raw.strip():
+        seg = _validate_local_file_path(seg_raw.strip(), "seg")
+    elif seg_raw not in (None, ""):
+        raise ApiError(
+            422,
+            "VALIDATION_ERROR",
+            "Field 'seg' must be a string when provided.",
+            {"field": "seg"},
+        )
+
+    patient_id = payload.get("patient_id", "unknown")
+    if patient_id is None:
+        patient_id = "unknown"
+    return {
+        "patient_id": str(patient_id),
+        "t2w": t2w,
+        "adc": adc,
+        "hbv": hbv,
+        "seg": seg,
+    }
+
+
 # ---------------------------------------------------------------------------
 # HTTP handler
 # ---------------------------------------------------------------------------
@@ -479,7 +603,12 @@ def _read_body(handler: BaseHTTPRequestHandler) -> dict:
     if length == 0:
         return {}
     raw = handler.rfile.read(length)
-    return json.loads(raw.decode("utf-8")) if raw else {}
+    if not raw:
+        return {}
+    try:
+        return json.loads(raw.decode("utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ApiError(400, "INVALID_JSON_BODY", "Request body is not valid JSON.") from exc
 
 
 class ClassifierHandler(BaseHTTPRequestHandler):
@@ -502,21 +631,23 @@ class ClassifierHandler(BaseHTTPRequestHandler):
                 "modalities":  _MODALITIES,
                 "aggregation": _AGGREGATION,
                 "threshold":   _THRESHOLD,
+                "allowed_file_roots": [str(p) for p in ALLOWED_FILE_ROOTS],
             })
         else:
-            _json_response(self, 404, {"error": f"Unknown path: {self.path}"})
+            _json_response(self, 404, {"error_code": "UNKNOWN_PATH", "error": f"Unknown path: {self.path}"})
 
     def do_POST(self) -> None:  # noqa: N802
         try:
             if self.path == "/api/classifier/predict":
                 # Body: single patient dict with keys t2w, adc, hbv, seg, patient_id
                 body = _read_body(self)
-                result = _process_row(body)
+                payload = _validate_predict_payload(body)
+                result = _process_row(payload)
                 _json_response(self, 200, result)
 
             elif self.path == "/api/classifier/preview":
                 # Body: {t2w, adc, hbv} – file paths on disk
-                body = _read_body(self)
+                body = _validate_predict_payload(_read_body(self))
                 image_data = _create_preview(
                     t2w_path=body.get("t2w", ""),
                     adc_path=body.get("adc", ""),
@@ -526,11 +657,12 @@ class ClassifierHandler(BaseHTTPRequestHandler):
 
             elif self.path == "/api/classifier/predict_csv":
                 # Body (optional): {"csv_path": "/path/to/file.csv"}
-                body    = _read_body(self)
-                csv_path = body.get("csv_path", str(DEFAULT_CSV))
-                if not Path(csv_path).exists():
-                    _json_response(self, 400, {"error": f"CSV not found: {csv_path}"})
-                    return
+                body = _read_body(self)
+                body = _validate_json_object(body)
+                csv_path_raw = body.get("csv_path", str(DEFAULT_CSV))
+                if not isinstance(csv_path_raw, str) or not csv_path_raw.strip():
+                    raise ApiError(422, "VALIDATION_ERROR", "Field 'csv_path' must be a non-empty string.")
+                csv_path = _validate_local_file_path(csv_path_raw.strip(), "csv_path")
                 result_df = run_csv_pipeline(csv_path)
                 # Save alongside the input CSV
                 out_path = Path(csv_path).with_stem(Path(csv_path).stem + "_predictions")
@@ -554,12 +686,18 @@ class ClassifierHandler(BaseHTTPRequestHandler):
                 })
 
             else:
-                _json_response(self, 404, {"error": f"Unknown path: {self.path}"})
+                _json_response(self, 404, {"error_code": "UNKNOWN_PATH", "error": f"Unknown path: {self.path}"})
 
+        except ApiError as exc:
+            _json_response(
+                self,
+                exc.status,
+                {"error_code": exc.code, "error": exc.message, "details": exc.details},
+            )
         except Exception:
             tb = traceback.format_exc()
             LOGGER.error("Unhandled error:\n%s", tb)
-            _json_response(self, 500, {"error": tb})
+            _json_response(self, 500, {"error_code": "INTERNAL_ERROR", "error": "Internal server error."})
 
 
 # ---------------------------------------------------------------------------

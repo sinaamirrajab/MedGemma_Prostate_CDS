@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "medgemma_recommend.request.schema.json",
+  "title": "MedGemma Recommend Request",
+  "type": "object",
+  "properties": {
+    "patient": { "type": "object" },
+    "modelPrediction": { "type": "object" }
+  },
+  "additionalProperties": true
+}
