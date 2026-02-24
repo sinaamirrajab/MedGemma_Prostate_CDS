@@ -2,7 +2,7 @@
   "name": "cds_app",
   "private": true,
   "version": "0.0.0",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "CC-BY-4.0",
   "type": "module",
   "scripts": {
     "convert:mha": "node scripts/convert-mha-to-nifti.mjs",

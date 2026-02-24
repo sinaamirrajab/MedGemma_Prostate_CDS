@@ -1,7 +1,7 @@
 # MedGemma CDS for Prostate Cancer Diagnosis and Treatment Recommendations
  MedGemma-enabled clinical decision support for prostate cancer risk stratification and guideline-aligned, patient-centred treatment planning
 
-![License: Academic Research NC-ND](https://img.shields.io/badge/License-Academic%20Research%20NC--ND-blue.svg)
+![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)
 
 **Team:** Precision Medicine Maastricht University  
 Sina Amirrajab, Zohaib Salahuddin
@@ -206,7 +206,7 @@ We presented a complete, end-to-end clinical decision support system for prostat
 
 ## License
 
-This project is licensed under the Academic Research License – NonCommercial, No Derivatives. See [LICENSE](LICENSE).
+This project is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License. See [LICENSE](LICENSE).
 
 ---
 
