@@ -11,7 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
-
+./dist
+medgemma_prostate_recommendation_pdq_rag.ipynb
+notes.md
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

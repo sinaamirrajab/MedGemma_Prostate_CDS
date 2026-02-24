@@ -1,0 +1,12 @@
+# Minimal Python dependencies for backend APIs
+# Install with: pip install -r requirements.txt
+
+joblib
+numpy
+pandas
+Pillow
+pypdf
+scikit-learn
+SimpleITK
+torch
+transformers

@@ -137,27 +137,38 @@ A `ThreadingHTTPServer` hosting `google/medgemma-1.5-4b-it`. Key design decision
 - Node.js ≥ 20 (via nvm)
 - NVIDIA GPU (≥ 24 GB VRAM recommended for MedGemma-4B)
 - HuggingFace token with access to `google/medgemma-1.5-4b-it` and `google/medsiglip-448`
+- Python deps file: `requirements.txt`
 
 ### Startup
 ```bash
-# Optional: copy and edit environment defaults
-cp .env.example .env
+# Minimal local run example (3 terminals)
 
-# 1. MedGemma recommendation API (port 8000)
-nohup python \
-  /path/to/cds/backend/medgemma_api.py > /tmp/medgemma_api.log 2>&1 &
-
-# 2. MedSigLIP classifier API (port 8001)
-#    Must run from backend/ so lr_medsiglip_features/ paths resolve
-cd /path/to/cds/backend
-nohup /mnt/data9/conda/medgemma/bin/python classifier_api.py \
-  > /tmp/classifier_api.log 2>&1 &
-
-# 3. Vite dev server (port 5173)
+# 0) One-time setup
 cd /path/to/cds
+cp .env.example .env
+python -m pip install -r requirements.txt
 npm install
 npm test
+
+# 1) Terminal A: MedGemma API (port 8000)
+cd /path/to/cds
+python backend/medgemma_api.py
+
+# 2) Terminal B: Classifier API (port 8001)
+# Must run from backend/ so lr_medsiglip_features/ relative paths resolve
+cd /path/to/cds/backend
+python classifier_api.py
+
+# 3) Terminal C: Frontend (port 5173)
+cd /path/to/cds
 npm run dev -- --host 0.0.0.0 --port 5173
+```
+
+### Quick health checks
+```bash
+# In a separate shell
+curl -s http://127.0.0.1:8000/health
+curl -s http://127.0.0.1:8001/health
 ```
 
 
