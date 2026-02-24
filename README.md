@@ -19,7 +19,7 @@ However, converting mpMRI into standardized [PI-RADS](https://www.sciencedirect.
 
 Downstream of diagnosis, treatment planning is an additional cognitive bottleneck. Clinicians must integrate MRI findings with PSA and PSA density, TNM staging, comorbidities, and patient preferences, then map this profile to guideline-concordant management options under strict clinic-time constraints. Although [PDQ® Prostate Cancer Treatment (NCI)](https://www.cancer.gov/types/prostate/hp/prostate-treatment-pdq) provides evidence-based guidance, operationalizing this knowledge at the point of care remains challenging without computational assistance.
 
-These constraints motivate a human-centered clinical decision support (CDS) system that can: (i) reduce variability in MRI-based risk estimation and (ii) translate guideline knowledge into patient-specific, explainable recommendations, using adaptable, privacy-focused, deploy-anywhere open models aligned with the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/google-medgemma-impact-challenge).
+These constraints motivate a human-centered clinical decision support (CDS) system that can: (i) reduce variability in MRI-based risk estimation and (ii) translate guideline knowledge into patient-specific, explainable recommendations, using adaptable, privacy-focused, deploy-anywhere open models aligned with the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/med-gemma-impact-challenge).
 
 This submission introduces a **full-stack Clinical Decision Support (CDS) web application** that fuses two complementary AI models:
 
