@@ -1,6 +1,8 @@
 # MedGemma CDS for Prostate Cancer Diagnosis and Treatment Recommendations
  MedGemma-enabled clinical decision support for prostate cancer risk stratification and guideline-aligned, patient-centred treatment planning
 
+![License: Academic Research NC-ND](https://img.shields.io/badge/License-Academic%20Research%20NC--ND-blue.svg)
+
 **Team:** Precision Medicine Maastricht University  
 Sina Amirrajab, Zohaib Salahuddin
 
@@ -201,6 +203,10 @@ cds/
 ## Conclusion
 
 We presented a complete, end-to-end clinical decision support system for prostate cancer that integrates state-of-the-art medical vision and language models in a clinician-facing web interface. MedSigLIP provides interpretable, quantified imaging biomarkers (csPCa probability with 5-fold uncertainty) while MedGemma translates the full clinical picture into personalised, guideline-grounded treatment recommendations and supports follow-up consultation via a context-aware chatbot. The system is fully open-source, reproducible, and designed with clinical workflow in mind.
+
+## License
+
+This project is licensed under the Academic Research License – NonCommercial, No Derivatives. See [LICENSE](LICENSE).
 
 ---
 
