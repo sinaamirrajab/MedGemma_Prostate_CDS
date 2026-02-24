@@ -1,62 +1,32 @@
-# MedGemma CDS: A Clinical Decision Support System for Prostate Cancer Treatment Planning
+# MedGemma CDS for Prostate Cancer Diagnosis and Treatment Recommendations
 
 **Team:** Precision Medicine Maastricht University  
+
 **Challenge:** The MedGemma Impact Challenge 2026  
-**Task:** AI-assisted, guideline-aligned treatment recommendation for prostate cancer using multiparametric MRI and large language models
+**Task:** MedGemma-enabled clinical decision support for prostate cancer risk stratification and guideline-aligned, patient-centred treatment planning
 
 ---
 
 ## 1. Introduction & Problem Statement
 
-Prostate cancer is the most common malignancy in men worldwide, and its management is inherently complex. Clinicians must reconcile multiparametric MRI findings, serum biomarkers (PSA, PSA density), TNM staging, patient comorbidities, and personal preferences before recommending a treatment pathway — all within a constrained consultation window. Guidelines from the PDQ® (Physician Data Query) provide evidence-based recommendations, but translating those guidelines into a personalised, patient-specific plan at the point of care remains a cognitive bottleneck.
+Prostate cancer remains a high-burden disease, with an estimated ~1.47 million new cases and ~397,000 deaths worldwide in 2022 ([GLOBOCAN 2022, IARC/WHO](https://gco.iarc.who.int/media/globocan/factsheets/cancers/27-prostate-fact-sheet.pdf)). Early and accurate detection of clinically significant prostate cancer (csPCa) increasingly depends on MRI-first pathways: both the [EAU Guidelines on Prostate Cancer](https://uroweb.org/guidelines/prostate-cancer) and [NICE Guideline NG131](https://www.nice.org.uk/guidance/ng131) recommend multiparametric MRI (mpMRI) before biopsy.
+
+However, converting mpMRI into standardized [PI-RADS](https://www.sciencedirect.com/science/article/pii/S0302283819301800) assessments remains a semi-quantitative, expertise-dependent task with meaningful inter-reader variability, which can propagate into inconsistent unnecessary biopsy decisions, missed csPCa, and overdiagnosis of indolent disease. In parallel, clinical programs are shifting toward faster, contrast-free biparametric MRI (bpMRI) pathways to increase throughput, further amplifying the need for robust and reproducible interpretation support.
+
+Downstream of diagnosis, treatment planning is an additional cognitive bottleneck. Clinicians must integrate MRI findings with PSA and PSA density, TNM staging, comorbidities, and patient preferences, then map this profile to guideline-concordant management options under strict clinic-time constraints. Although [PDQ® Prostate Cancer Treatment (NCI)](https://www.cancer.gov/types/prostate/hp/prostate-treatment-pdq) provides evidence-based guidance, operationalizing this knowledge at the point of care remains challenging without computational assistance.
+
+These constraints motivate a human-centered clinical decision support (CDS) system that can: (i) reduce variability in MRI-based risk estimation and (ii) translate guideline knowledge into patient-specific, explainable recommendations, using adaptable, privacy-focused, deploy-anywhere open models aligned with the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/google-medgemma-impact-challenge).
 
 This submission introduces a **full-stack Clinical Decision Support (CDS) web application** that fuses two complementary AI models:
 
-1. **MedSigLIP-448** — a vision encoder fine-tuned on medical imaging — driving a five-fold logistic regression ensemble that estimates the probability of clinically significant prostate cancer (csPCa) directly from mpMRI.
+1. **MedSigLIP-448** — a medical vision encoder adapted and fine-tuned for csPCa risk stratification using [PI-CAI challenge data](https://pi-cai.grand-challenge.org/) (public training/development cohort built on bpMRI) — driving a five-fold logistic regression ensemble that estimates the probability of clinically significant prostate cancer (csPCa) directly from bpMRI sequences.
 2. **MedGemma-1.5-4B-IT** — a medical large language model — that converts the structured patient record and AI predictions into ranked, free-text treatment recommendations, augmented with relevant PDQ guideline passages via Retrieval-Augmented Generation (RAG), and that also serves as an interactive clinical assistant chatbot.
 
 ---
 
 ## 2. Solution Overview
 
-The system is a single-page React application backed by two independent Python HTTP services. The workflow for each patient case proceeds in three stages:
-
-```
-mpMRI volumes (T2W · ADC · HBV)
-        │
-        ▼
-┌─────────────────────────────────┐
-│  MedSigLIP Classifier API       │  ← port 8001
-│  · Resample → 0.3125×0.3125×3mm│
-│  · Seg-based prostate crop      │
-│  · Per-slice percentile norm    │
-│  · 448-px centre crop           │
-│  · google/medsiglip-448 encoder │
-│  · Gaussian slice pooling (σ=2) │
-│  · 5-fold LR ensemble           │
-│  → P(csPCa), uncertainty CI     │
-└─────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────┐
-│  Clinical Inputs (UI form)      │
-│  · TNM staging, PSA, age        │
-│  · Comorbidities, LUTS          │
-│  · Patient preferences          │
-└─────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────┐
-│  MedGemma Recommendation API    │  ← port 8000
-│  · BM25 RAG over PDQ guidelines │
-│  · Structured JSON prompt       │
-│  · google/medgemma-1.5-4b-it    │
-│  → Ranked treatment options     │
-│  → Interactive chat assistant   │
-└─────────────────────────────────┘
-```
-
----
+![Methodology](public/imgs/method.png)
 
 ## 3. System Architecture
 
@@ -100,7 +70,7 @@ A pure-Python `ThreadingHTTPServer` wrapping the following pipeline:
 - Modalities are aggregated by **mean** pooling across `[HBV, ADC, HBV]`, yielding a single 1152-dimensional feature vector.
 
 **Prediction**:
-- A 5-fold logistic regression ensemble (trained on 1 254 PI-CAI cases) predicts `P(csPCa)`.
+- A 5-fold logistic regression ensemble (fine-tuned on 1 254 cases sampled from the [PI-CAI challenge dataset](https://pi-cai.grand-challenge.org/DATA/)) predicts `P(csPCa)`.
 - Uncertainty is reported as: cross-fold standard deviation, predictive entropy, and 95% confidence interval.
 - Threshold: **0.52** (optimised on the validation set).
 
@@ -151,7 +121,7 @@ The assistant panel provides a free-form conversational interface grounded on th
 
 ## 5. Model Performance
 
-The MedSigLIP + logistic regression ensemble was trained and evaluated on the [PI-CAI](https://pi-cai.grand-challenge.org/) dataset (1 254 training+validation / 222 test cases, 5-fold cross-validation).
+The MedSigLIP + logistic regression ensemble was fine-tuned and evaluated on [PI-CAI challenge data](https://pi-cai.grand-challenge.org/) (from the public training/development bpMRI cohort; this implementation uses 1 254 training+validation / 222 test cases with 5-fold cross-validation).
 
 | Split | AUROC | Average Precision | Accuracy | Recall |
 |---|---|---|---|---|
@@ -247,7 +217,7 @@ cds/
 
 - **Not for clinical use.** The system is a research prototype. All outputs carry the disclaimer *"Demo outputs only. Not for clinical use."*
 - **Scale**: The current demo loads four PI-CAI cases. Extending to a full cohort requires a server-side patient store (e.g. a lightweight SQLite database) rather than in-browser CSV.
-- **MedSigLIP fine-tuning**: The vision encoder is used zero-shot (no task-specific fine-tuning of the encoder weights). End-to-end fine-tuning on the full PI-CAI dataset is expected to substantially improve AUROC.
+- **MedSigLIP fine-tuning depth**: The current system performs dataset-specific adaptation on PI-CAI through downstream classifier fine-tuning on MedSigLIP embeddings. Full end-to-end encoder fine-tuning on the complete PI-CAI public cohort (1,500 cases) is a planned next step for additional AUROC gains.
 - **Report generation**: A PDF export pathway (combining the imaging panel screenshot, predictions, and recommendation) would improve clinical utility.
 - **T2W modality**: The current classifier configuration uses `[HBV, ADC, HBV]` and omits T2W. Adding T2W as a fourth modality may improve sensitivity for low-ADC lesions.
 - **Multimodal MedGemma**: Once multimodal (image + text) versions of MedGemma are available, the vision and language reasoning could be unified in a single model rather than a two-stage pipeline.

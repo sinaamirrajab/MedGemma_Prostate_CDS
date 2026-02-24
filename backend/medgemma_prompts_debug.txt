@@ -4540,3 +4540,1243 @@ Alternatively, **external beam radiation therapy (EBRT)** could be discussed. EB
 While active surveillance is an option for low-risk prostate cancer, it is generally not recommended for patients with PSA levels as high as 100 ng/mL due to the increased risk of disease progression.
 
 Therefore, the recommendation would be to discuss **radical prostatectomy** or **EBRT** with the patient, considering their overall health, comorbidities, and specific preferences regarding side effects and quality of life. A thorough discussion of the risks, benefits, and potential outcomes of each option is essential.
+
+
+===== recommendation_prompt | 2026-02-24T12:03:25.771525+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T2",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "6.6",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension",
+    "Coronary artery disease",
+    "Anticoagulation use",
+    "Prior stroke/TIA"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.114"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.26053518056869507,
+  "predictedProstateVolumeMl": 58,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] = .2). Nor was there a difference in prostate– cancer-specific mortality (3.9% vs. 5.2%; HR, 0.78; 95% CI, 0.46–1.33; P = .34) The 10-year cumulative risk of severe (grade 3) late toxicity in the immediate radiation study group was 5.3% versus 2.5% in the observation group (P = .052). Late adverse effects of any grade were also higher in the immediate radiation group (70.8% vs. 59.7%; P = .001). Radical prostatectomy has been compared with watchful waiting or active surveillance/active monitoring. For more information, see the Radical prostatectomy compared with other treatment options section. Evidence (radical prostatectomy compared with watchful waiting): 1. The Prostate Intervention Versus Observation Trial (PIVOT-1 or VA-CSP-407 [NCT00007644]) is a randomized trial conducted in the PSA screening era that directly compared radical prostatectomy with watchful waiting. From November 1
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T12:03:58.894388+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T2N0M0) with a PSA of 6.6, is clinically well (ECOG 0), and has high priorities for sexual function and urinary continence. The AI predicts a low probability of clinically significant prostate cancer (csPca). Given the low csPca probability and the patient's preferences, active surveillance is a reasonable initial approach.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has localized prostate cancer (T2N0M0) with a low probability of clinically significant prostate cancer (csPca) based on the AI prediction (csPcaProbability = 0.26). The patient is clinically well (ECOG 0) and has high priorities for sexual function and urinary continence. Active surveillance is a standard option for low-risk localized prostate cancer, allowing the patient to avoid immediate treatment while monitoring the cancer's progression. It aligns with the patient's preferences for balanced treatment intensity and moderate follow-up burden. [PDQ p.74]",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and possibly imaging (like MRI) to monitor the cancer's growth. Treatment is initiated only if the cancer progresses significantly (e.g., PSA rises rapidly, cancer grows on imaging). This approach avoids the side effects of immediate treatment like surgery or radiation, preserving quality of life. The patient would need to be educated on the risks (potential for delayed treatment if cancer progresses) and benefits (avoiding treatment side effects)."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a definitive treatment for localized prostate cancer that removes the entire prostate gland. It offers a high chance of cure, especially for low-risk disease like this patient's (T2N0M0). It is a standard option for patients with localized disease who desire definitive treatment and are suitable surgical candidates. Given the patient's age (68) and comorbidities (Hypertension, CAD, anticoagulation), surgical risk needs careful evaluation, but it remains a primary consideration for localized disease. [PDQ p.32, p.33, p.74]",
+      "description": "Radical prostatectomy involves surgically removing the prostate gland and seminal vesicles. It is typically performed under general anesthesia. Potential benefits include a high rate of cancer control and preservation of urinary function (though incontinence can occur). Potential risks include surgical complications (bleeding, infection, injury to nearby organs), erectile dysfunction, and urinary incontinence. The patient would need a thorough preoperative evaluation, including assessment of surgical risk and discussion of potential outcomes."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another definitive treatment option for localized prostate cancer. It uses high-energy rays to kill cancer cells. It is often considered for patients who are not surgical candidates or prefer to avoid surgery. It can be used alone or in combination with hormonal therapy. For low-risk disease like this patient's, radiation therapy offers a high chance of cure with potentially fewer immediate side effects than surgery, although long-term side effects like incontinence and erectile dysfunction can occur. [PDQ p.32, p.33, p.74]",
+      "description": "EBRT involves delivering radiation from a machine outside the body. It is typically given daily for several weeks. Potential benefits include a high rate of cancer control and preservation of urinary function. Potential risks include side effects related to the radiation field, such as rectal bleeding, diarrhea, fatigue, and potential long-term effects on bladder and rectum function (incontinence, erectile dysfunction). The patient would need a thorough evaluation of radiation side effects and discussion of treatment planning."
+    }
+  ],
+  "note": "The final decision should be made in consultation with the patient, considering his preferences, comorbidities, and a detailed discussion of the risks and benefits of each option. The patient's high priority for sexual function and urinary continence should be carefully weighed against the potential side effects of each treatment modality."
+}
+```
+
+
+===== recommendation_raw_output | 2026-02-24T12:03:58.894459+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T2N0M0) with a PSA of 6.6, is clinically well (ECOG 0), and has high priorities for sexual function and urinary continence. The AI predicts a low probability of clinically significant prostate cancer (csPca). Given the low csPca probability and the patient's preferences, active surveillance is a reasonable initial approach.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has localized prostate cancer (T2N0M0) with a low probability of clinically significant prostate cancer (csPca) based on the AI prediction (csPcaProbability = 0.26). The patient is clinically well (ECOG 0) and has high priorities for sexual function and urinary continence. Active surveillance is a standard option for low-risk localized prostate cancer, allowing the patient to avoid immediate treatment while monitoring the cancer's progression. It aligns with the patient's preferences for balanced treatment intensity and moderate follow-up burden. [PDQ p.74]",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and possibly imaging (like MRI) to monitor the cancer's growth. Treatment is initiated only if the cancer progresses significantly (e.g., PSA rises rapidly, cancer grows on imaging). This approach avoids the side effects of immediate treatment like surgery or radiation, preserving quality of life. The patient would need to be educated on the risks (potential for delayed treatment if cancer progresses) and benefits (avoiding treatment side effects)."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a definitive treatment for localized prostate cancer that removes the entire prostate gland. It offers a high chance of cure, especially for low-risk disease like this patient's (T2N0M0). It is a standard option for patients with localized disease who desire definitive treatment and are suitable surgical candidates. Given the patient's age (68) and comorbidities (Hypertension, CAD, anticoagulation), surgical risk needs careful evaluation, but it remains a primary consideration for localized disease. [PDQ p.32, p.33, p.74]",
+      "description": "Radical prostatectomy involves surgically removing the prostate gland and seminal vesicles. It is typically performed under general anesthesia. Potential benefits include a high rate of cancer control and preservation of urinary function (though incontinence can occur). Potential risks include surgical complications (bleeding, infection, injury to nearby organs), erectile dysfunction, and urinary incontinence. The patient would need a thorough preoperative evaluation, including assessment of surgical risk and discussion of potential outcomes."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another definitive treatment option for localized prostate cancer. It uses high-energy rays to kill cancer cells. It is often considered for patients who are not surgical candidates or prefer to avoid surgery. It can be used alone or in combination with hormonal therapy. For low-risk disease like this patient's, radiation therapy offers a high chance of cure with potentially fewer immediate side effects than surgery, although long-term side effects like incontinence and erectile dysfunction can occur. [PDQ p.32, p.33, p.74]",
+      "description": "EBRT involves delivering radiation from a machine outside the body. It is typically given daily for several weeks. Potential benefits include a high rate of cancer control and preservation of urinary function. Potential risks include side effects related to the radiation field, such as rectal bleeding, diarrhea, fatigue, and potential long-term effects on bladder and rectum function (incontinence, erectile dysfunction). The patient would need a thorough evaluation of radiation side effects and discussion of treatment planning."
+    }
+  ],
+  "note": "The final decision should be made in consultation with the patient, considering his preferences, comorbidities, and a detailed discussion of the risks and benefits of each option. The patient's high priority for sexual function and urinary continence should be carefully weighed against the potential side effects of each treatment modality."
+}
+```
+
+
+===== recommendation_prompt | 2026-02-24T12:06:24.843527+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T2",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "6.6",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.114"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.26053518056869507,
+  "predictedProstateVolumeMl": 58,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] = .2). Nor was there a difference in prostate– cancer-specific mortality (3.9% vs. 5.2%; HR, 0.78; 95% CI, 0.46–1.33; P = .34) The 10-year cumulative risk of severe (grade 3) late toxicity in the immediate radiation study group was 5.3% versus 2.5% in the observation group (P = .052). Late adverse effects of any grade were also higher in the immediate radiation group (70.8% vs. 59.7%; P = .001). Radical prostatectomy has been compared with watchful waiting or active surveillance/active monitoring. For more information, see the Radical prostatectomy compared with other treatment options section. Evidence (radical prostatectomy compared with watchful waiting): 1. The Prostate Intervention Versus Observation Trial (PIVOT-1 or VA-CSP-407 [NCT00007644]) is a randomized trial conducted in the PSA screening era that directly compared radical prostatectomy with watchful waiting. From November 1
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T12:06:56.848141+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T2N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), but the patient has high priorities for urinary continence and sexual function, and a balanced treatment intensity preference. Given the low csPca probability and the patient's preferences, active surveillance is a reasonable initial consideration, but the high priority for urinary continence and sexual function warrants discussion of surgical options.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The AI prediction indicates a low probability of clinically significant prostate cancer (csPca), making active surveillance a potential option. This approach involves monitoring the cancer's progression without immediate treatment. It aligns with the patient's preference for balanced treatment intensity and moderate follow-up burden. However, the patient's high priority for urinary continence and sexual function may be compromised by this approach, requiring careful counseling.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and possibly imaging (like MRI) to monitor the cancer's growth. Treatment is initiated if the cancer progresses significantly. This option avoids the side effects of treatment but carries the risk of delayed treatment for potentially aggressive cancer. The patient should be counseled on the potential impact on urinary continence and sexual function, and the need for regular follow-up."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a surgical option that removes the entire prostate gland. It offers the potential for cure in early-stage prostate cancer like this patient's (T2N0M0). It is often considered for patients with high priorities for urinary continence and sexual function, as it can potentially restore these functions. While it carries surgical risks and potential long-term side effects (like incontinence and erectile dysfunction), it is a standard treatment for localized prostate cancer.",
+      "description": "Radical prostatectomy involves removing the prostate gland and seminal vesicles. It is typically performed via a perineal or retropubic approach. Potential benefits include a high chance of cure for localized cancer and restoration of urinary continence and sexual function. Risks include surgical complications, infection, bleeding, and long-term side effects such as urinary incontinence, erectile dysfunction, and bowel dysfunction. The patient should be counseled on the risks, benefits, and potential outcomes."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another primary treatment option for localized prostate cancer. It uses high-energy rays to kill cancer cells. It is less invasive than surgery but can have side effects, including urinary and bowel issues, and potentially impact sexual function. It is a standard treatment for patients who are not candidates for surgery or prefer to avoid surgery, and it can be combined with hormonal therapy.",
+      "description": "EBRT involves delivering radiation to the prostate gland from a machine outside the body. It typically requires daily treatment for several weeks. Potential benefits include a high chance of cure for localized cancer and avoidance of surgical risks. Risks include side effects such as urinary frequency, urgency, and incontinence, bowel changes, fatigue, and potential impact on sexual function. Hormonal therapy may be added to improve outcomes, especially in higher-risk patients. The patient should be counseled on the potential side effects and treatment schedule."
+    }
+  ],
+  "note": "The final decision should be made in consultation with the patient, considering their specific preferences, values, and overall health status, as well as the potential risks and benefits of each option."
+}
+```
+
+
+===== recommendation_raw_output | 2026-02-24T12:06:56.848209+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T2N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), but the patient has high priorities for urinary continence and sexual function, and a balanced treatment intensity preference. Given the low csPca probability and the patient's preferences, active surveillance is a reasonable initial consideration, but the high priority for urinary continence and sexual function warrants discussion of surgical options.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The AI prediction indicates a low probability of clinically significant prostate cancer (csPca), making active surveillance a potential option. This approach involves monitoring the cancer's progression without immediate treatment. It aligns with the patient's preference for balanced treatment intensity and moderate follow-up burden. However, the patient's high priority for urinary continence and sexual function may be compromised by this approach, requiring careful counseling.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and possibly imaging (like MRI) to monitor the cancer's growth. Treatment is initiated if the cancer progresses significantly. This option avoids the side effects of treatment but carries the risk of delayed treatment for potentially aggressive cancer. The patient should be counseled on the potential impact on urinary continence and sexual function, and the need for regular follow-up."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a surgical option that removes the entire prostate gland. It offers the potential for cure in early-stage prostate cancer like this patient's (T2N0M0). It is often considered for patients with high priorities for urinary continence and sexual function, as it can potentially restore these functions. While it carries surgical risks and potential long-term side effects (like incontinence and erectile dysfunction), it is a standard treatment for localized prostate cancer.",
+      "description": "Radical prostatectomy involves removing the prostate gland and seminal vesicles. It is typically performed via a perineal or retropubic approach. Potential benefits include a high chance of cure for localized cancer and restoration of urinary continence and sexual function. Risks include surgical complications, infection, bleeding, and long-term side effects such as urinary incontinence, erectile dysfunction, and bowel dysfunction. The patient should be counseled on the risks, benefits, and potential outcomes."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another primary treatment option for localized prostate cancer. It uses high-energy rays to kill cancer cells. It is less invasive than surgery but can have side effects, including urinary and bowel issues, and potentially impact sexual function. It is a standard treatment for patients who are not candidates for surgery or prefer to avoid surgery, and it can be combined with hormonal therapy.",
+      "description": "EBRT involves delivering radiation to the prostate gland from a machine outside the body. It typically requires daily treatment for several weeks. Potential benefits include a high chance of cure for localized cancer and avoidance of surgical risks. Risks include side effects such as urinary frequency, urgency, and incontinence, bowel changes, fatigue, and potential impact on sexual function. Hormonal therapy may be added to improve outcomes, especially in higher-risk patients. The patient should be counseled on the potential side effects and treatment schedule."
+    }
+  ],
+  "note": "The final decision should be made in consultation with the patient, considering their specific preferences, values, and overall health status, as well as the potential risks and benefits of each option."
+}
+```
+
+
+===== recommendation_prompt | 2026-02-24T12:07:02.355362+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T0",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "6.6",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.114"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.26053518056869507,
+  "predictedProstateVolumeMl": 58,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] = .2). Nor was there a difference in prostate– cancer-specific mortality (3.9% vs. 5.2%; HR, 0.78; 95% CI, 0.46–1.33; P = .34) The 10-year cumulative risk of severe (grade 3) late toxicity in the immediate radiation study group was 5.3% versus 2.5% in the observation group (P = .052). Late adverse effects of any grade were also higher in the immediate radiation group (70.8% vs. 59.7%; P = .001). Radical prostatectomy has been compared with watchful waiting or active surveillance/active monitoring. For more information, see the Radical prostatectomy compared with other treatment options section. Evidence (radical prostatectomy compared with watchful waiting): 1. The Prostate Intervention Versus Observation Trial (PIVOT-1 or VA-CSP-407 [NCT00007644]) is a randomized trial conducted in the PSA screening era that directly compared radical prostatectomy with watchful waiting. From November 1
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T12:07:35.067787+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T0N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), indicating a low Gleason score (likely 3+3 or 3+4). Given the patient's high priority for urinary continence and sexual function, and balanced treatment intensity preference, active surveillance is a reasonable initial approach, especially considering the low csPca probability. However, if the patient prefers more definitive treatment or if the csPca probability were higher, surgery or radiation would be considered. Given the low csPca probability, active surveillance is the most appropriate initial recommendation.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has localized prostate cancer (T0N0M0) with a low probability of clinically significant prostate cancer (csPca) based on the AI prediction (csPcaProbability = 0.26). This suggests a low Gleason score (likely 3+3 or 3+4). The patient's high priority for urinary continence and sexual function, along with a balanced treatment intensity preference, makes active surveillance a suitable initial management strategy. Active surveillance involves monitoring the cancer's progression without immediate treatment, allowing the patient to avoid the side effects of therapy while closely tracking the disease. PDQ p.74 suggests active surveillance is an option for stage II prostate cancer, and while this patient is T0N0M0, the principle of monitoring progression applies.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and potentially imaging (like MRI) to monitor the cancer's growth rate. Treatment is initiated only if the cancer progresses significantly (e.g., PSA rises rapidly, symptoms develop). This approach avoids the side effects of surgery or radiation but requires significant patient commitment to follow-up and lifestyle adjustments. The patient should be counseled on the risks (potential for progression, need for close monitoring) and benefits (avoiding treatment side effects)."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a definitive surgical treatment for localized prostate cancer. It involves removing the entire prostate gland and seminal vesicles. This option offers a high chance of cure for localized disease, especially in younger patients with lower PSA levels and favorable Gleason scores. Given the patient's age (68) and low csPca probability, surgery could be considered if the patient prefers a more definitive approach or if the low csPca probability changes over time. The patient's high priority for urinary continence and sexual function is a key factor, as radical prostatectomy is the only treatment option that reliably preserves these functions. PDQ p.32 lists radical prostatectomy as a treatment option for stage I and II prostate cancer.",
+      "description": "Radical prostatectomy is a major surgery typically performed under general anesthesia. It requires several weeks of recovery time. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include surgical complications (bleeding, infection, injury to nearby organs), erectile dysfunction, urinary incontinence, and the need for lifelong testosterone suppression therapy (hormone therapy) to prevent recurrence. The patient should be thoroughly counseled on the risks, benefits, and recovery process."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another definitive treatment option for localized prostate cancer. It uses high-energy X-rays to kill cancer cells. EBRT can be used alone or in combination with hormone therapy. It offers a high chance of cancer control and preserves urinary and sexual function, similar to surgery. Given the patient's low csPca probability, EBRT could be considered if the patient prefers radiation over surgery or if surgery is contraindicated or declined. The patient's high priority for urinary continence and sexual function makes radiation a viable alternative to surgery. PDQ p.32 lists EBRT as a treatment option for stage I and II prostate cancer.",
+      "description": "EBRT typically involves daily treatment sessions over several weeks (e.g., 4-6 weeks). It is usually administered at a specialized radiation oncology center. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include side effects related to the radiation dose, such as urinary issues (frequency, urgency, incontinence), bowel issues (constipation, diarrhea), fatigue, and potential long-term effects like rectal bleeding or bladder problems. The patient should be counseled on the treatment schedule, potential side effects, and recovery."
+    }
+  ],
+  "note": "The patient's preference for urinary continence and sexual function is a critical factor in choosing between radical prostatectomy and radiation therapy. Active surveillance is the least invasive option but carries the risk of disease progression. The decision should be made in collaboration with the patient after thorough counseling on the risks, benefits, and potential outcomes of each option."
+}
+```
+
+
+===== recommendation_raw_output | 2026-02-24T12:07:35.067863+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T0N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), indicating a low Gleason score (likely 3+3 or 3+4). Given the patient's high priority for urinary continence and sexual function, and balanced treatment intensity preference, active surveillance is a reasonable initial approach, especially considering the low csPca probability. However, if the patient prefers more definitive treatment or if the csPca probability were higher, surgery or radiation would be considered. Given the low csPca probability, active surveillance is the most appropriate initial recommendation.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has localized prostate cancer (T0N0M0) with a low probability of clinically significant prostate cancer (csPca) based on the AI prediction (csPcaProbability = 0.26). This suggests a low Gleason score (likely 3+3 or 3+4). The patient's high priority for urinary continence and sexual function, along with a balanced treatment intensity preference, makes active surveillance a suitable initial management strategy. Active surveillance involves monitoring the cancer's progression without immediate treatment, allowing the patient to avoid the side effects of therapy while closely tracking the disease. PDQ p.74 suggests active surveillance is an option for stage II prostate cancer, and while this patient is T0N0M0, the principle of monitoring progression applies.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and potentially imaging (like MRI) to monitor the cancer's growth rate. Treatment is initiated only if the cancer progresses significantly (e.g., PSA rises rapidly, symptoms develop). This approach avoids the side effects of surgery or radiation but requires significant patient commitment to follow-up and lifestyle adjustments. The patient should be counseled on the risks (potential for progression, need for close monitoring) and benefits (avoiding treatment side effects)."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a definitive surgical treatment for localized prostate cancer. It involves removing the entire prostate gland and seminal vesicles. This option offers a high chance of cure for localized disease, especially in younger patients with lower PSA levels and favorable Gleason scores. Given the patient's age (68) and low csPca probability, surgery could be considered if the patient prefers a more definitive approach or if the low csPca probability changes over time. The patient's high priority for urinary continence and sexual function is a key factor, as radical prostatectomy is the only treatment option that reliably preserves these functions. PDQ p.32 lists radical prostatectomy as a treatment option for stage I and II prostate cancer.",
+      "description": "Radical prostatectomy is a major surgery typically performed under general anesthesia. It requires several weeks of recovery time. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include surgical complications (bleeding, infection, injury to nearby organs), erectile dysfunction, urinary incontinence, and the need for lifelong testosterone suppression therapy (hormone therapy) to prevent recurrence. The patient should be thoroughly counseled on the risks, benefits, and recovery process."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another definitive treatment option for localized prostate cancer. It uses high-energy X-rays to kill cancer cells. EBRT can be used alone or in combination with hormone therapy. It offers a high chance of cancer control and preserves urinary and sexual function, similar to surgery. Given the patient's low csPca probability, EBRT could be considered if the patient prefers radiation over surgery or if surgery is contraindicated or declined. The patient's high priority for urinary continence and sexual function makes radiation a viable alternative to surgery. PDQ p.32 lists EBRT as a treatment option for stage I and II prostate cancer.",
+      "description": "EBRT typically involves daily treatment sessions over several weeks (e.g., 4-6 weeks). It is usually administered at a specialized radiation oncology center. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include side effects related to the radiation dose, such as urinary issues (frequency, urgency, incontinence), bowel issues (constipation, diarrhea), fatigue, and potential long-term effects like rectal bleeding or bladder problems. The patient should be counseled on the treatment schedule, potential side effects, and recovery."
+    }
+  ],
+  "note": "The patient's preference for urinary continence and sexual function is a critical factor in choosing between radical prostatectomy and radiation therapy. Active surveillance is the least invasive option but carries the risk of disease progression. The decision should be made in collaboration with the patient after thorough counseling on the risks, benefits, and potential outcomes of each option."
+}
+```
+
+
+===== recommendation_prompt | 2026-02-24T12:08:29.439279+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T0",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "11.0",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.086"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.17569930851459503,
+  "predictedProstateVolumeMl": 128,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] ts (95% CI -1.5 to 12.4) that was not statistically significant (HR, 0.84; 95% CI, 0.70–1.01). Prostate–cancer-specific mortality was 7.4% versus 11.4%, and it also was not statistically significant (HR, 0.63; 95% CI, 0.3–1.02). Although treatment for disease progression was given more frequently in the observation arm of the study, most of the treatment was for asymptomatic, local, or biochemical (PSA) progression.
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T12:09:03.007052+00:00 =====
+```json
+{
+  "summary": "The patient has clinically significant prostate cancer (csPca) based on the AI prediction, with a PSA of 11.0 ng/mL and a Gleason score of 3+4 (ISUP grade group >=2). Given the patient's age (68), T0N0M0 stage, ECOG 0 performance, mild lower urinary symptoms, and high priority for sexual function and urinary continence, active surveillance is a reasonable initial consideration, but the high PSA and Gleason score suggest a higher risk of progression. Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is particularly relevant. Hormonal therapy (like Bicalutamide) is typically used in combination with radiation or surgery, or as primary treatment for advanced disease, but is less commonly used as a primary curative option for localized disease with this PSA level, especially when surgery is considered. Therefore, radical prostatectomy is the most appropriate primary treatment option.",
+  "options": [
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is highly relevant and aligns with current guidelines for managing localized prostate cancer with these characteristics [PDQ p.74].",
+      "description": "Radical prostatectomy involves the surgical removal of the entire prostate gland. It is typically performed under general anesthesia. The patient will be monitored closely for urinary function, sexual function, and potential complications such as infection, bleeding, and erectile dysfunction. The procedure is usually performed robotically or via laparoscopy. The patient will require follow-up monitoring, including PSA testing, digital rectal exams, and potentially imaging, to assess for recurrence or metastasis. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include infection, bleeding, blood clots, erectile dysfunction, and urinary incontinence. The recovery period typically involves several weeks of recovery before returning to normal activities."
+    },
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Active surveillance is a reasonable initial management strategy for patients with localized prostate cancer, particularly those with lower PSA levels, less aggressive Gleason scores, and fewer symptoms [PDQ p.74]. However, the patient's high PSA level and Gleason score (3+4) place them in a higher risk category for progression, making active surveillance less ideal as the sole initial approach, although it could be considered if the patient prefers to avoid immediate treatment and is closely monitored. Given the high priority for urinary continence, immediate treatment might be preferred.",
+      "description": "Active surveillance involves monitoring the patient's PSA levels, digital rectal exams, and potentially other tests (like MRI) to track the cancer's growth. Treatment is initiated only if the cancer shows signs of significant progression (e.g., rising PSA, worsening symptoms). This approach avoids the risks and side effects of immediate treatment but carries the risk of cancer progression during the surveillance period. The patient will need regular follow-up appointments and PSA testing. The expected benefits include avoiding immediate treatment side effects. Potential risks include the possibility of cancer progression during surveillance and the need for treatment later if progression occurs. The patient's preferences regarding treatment intensity and follow-up burden should be discussed."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radiation therapy (EBRT) is a standard treatment option for localized prostate cancer, offering a potential cure while preserving urinary function [PDQ p.74]. It is often used in combination with hormonal therapy, but can be used alone. Given the patient's high priority for urinary continence, radiation therapy is a viable alternative to surgery. The patient's age and performance status are suitable for radiation therapy.",
+      "description": "External-beam radiation therapy (EBRT) uses high-energy rays (like X-rays or protons) to target the prostate gland and surrounding tissues. It is typically delivered daily for several weeks (e.g., 45-50 sessions). The patient will receive daily treatment sessions, usually for about 30-60 minutes per session. Side effects can include urinary frequency, urgency, and difficulty urinating, especially in the first few weeks. Sexual side effects, such as erectile dysfunction, can also occur. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include side effects related to the radiation itself, such as urinary issues, sexual dysfunction, and potential long-term risks like incontinence or rectal bleeding. The patient will
+
+
+===== recommendation_raw_output | 2026-02-24T12:09:03.007123+00:00 =====
+```json
+{
+  "summary": "The patient has clinically significant prostate cancer (csPca) based on the AI prediction, with a PSA of 11.0 ng/mL and a Gleason score of 3+4 (ISUP grade group >=2). Given the patient's age (68), T0N0M0 stage, ECOG 0 performance, mild lower urinary symptoms, and high priority for sexual function and urinary continence, active surveillance is a reasonable initial consideration, but the high PSA and Gleason score suggest a higher risk of progression. Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is particularly relevant. Hormonal therapy (like Bicalutamide) is typically used in combination with radiation or surgery, or as primary treatment for advanced disease, but is less commonly used as a primary curative option for localized disease with this PSA level, especially when surgery is considered. Therefore, radical prostatectomy is the most appropriate primary treatment option.",
+  "options": [
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is highly relevant and aligns with current guidelines for managing localized prostate cancer with these characteristics [PDQ p.74].",
+      "description": "Radical prostatectomy involves the surgical removal of the entire prostate gland. It is typically performed under general anesthesia. The patient will be monitored closely for urinary function, sexual function, and potential complications such as infection, bleeding, and erectile dysfunction. The procedure is usually performed robotically or via laparoscopy. The patient will require follow-up monitoring, including PSA testing, digital rectal exams, and potentially imaging, to assess for recurrence or metastasis. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include infection, bleeding, blood clots, erectile dysfunction, and urinary incontinence. The recovery period typically involves several weeks of recovery before returning to normal activities."
+    },
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Active surveillance is a reasonable initial management strategy for patients with localized prostate cancer, particularly those with lower PSA levels, less aggressive Gleason scores, and fewer symptoms [PDQ p.74]. However, the patient's high PSA level and Gleason score (3+4) place them in a higher risk category for progression, making active surveillance less ideal as the sole initial approach, although it could be considered if the patient prefers to avoid immediate treatment and is closely monitored. Given the high priority for urinary continence, immediate treatment might be preferred.",
+      "description": "Active surveillance involves monitoring the patient's PSA levels, digital rectal exams, and potentially other tests (like MRI) to track the cancer's growth. Treatment is initiated only if the cancer shows signs of significant progression (e.g., rising PSA, worsening symptoms). This approach avoids the risks and side effects of immediate treatment but carries the risk of cancer progression during the surveillance period. The patient will need regular follow-up appointments and PSA testing. The expected benefits include avoiding immediate treatment side effects. Potential risks include the possibility of cancer progression during surveillance and the need for treatment later if progression occurs. The patient's preferences regarding treatment intensity and follow-up burden should be discussed."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radiation therapy (EBRT) is a standard treatment option for localized prostate cancer, offering a potential cure while preserving urinary function [PDQ p.74]. It is often used in combination with hormonal therapy, but can be used alone. Given the patient's high priority for urinary continence, radiation therapy is a viable alternative to surgery. The patient's age and performance status are suitable for radiation therapy.",
+      "description": "External-beam radiation therapy (EBRT) uses high-energy rays (like X-rays or protons) to target the prostate gland and surrounding tissues. It is typically delivered daily for several weeks (e.g., 45-50 sessions). The patient will receive daily treatment sessions, usually for about 30-60 minutes per session. Side effects can include urinary frequency, urgency, and difficulty urinating, especially in the first few weeks. Sexual side effects, such as erectile dysfunction, can also occur. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include side effects related to the radiation itself, such as urinary issues, sexual dysfunction, and potential long-term risks like incontinence or rectal bleeding. The patient will
+
+
+===== recommendation_prompt_retry_2 | 2026-02-24T12:09:03.007604+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T0",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "11.0",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.086"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.17569930851459503,
+  "predictedProstateVolumeMl": 128,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] ts (95% CI -1.5 to 12.4) that was not statistically significant (HR, 0.84; 95% CI, 0.70–1.01). Prostate–cancer-specific mortality was 7.4% versus 11.4%, and it also was not statistically significant (HR, 0.63; 95% CI, 0.3–1.02). Although treatment for disease progression was given more frequently in the observation arm of the study, most of the treatment was for asymptomatic, local, or biochemical (PSA) progression.
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+
+Your previous response was invalid or truncated JSON.
+Parsing error: MedGemma did not return valid JSON output.
+Return a NEW complete JSON object now.
+Do not include markdown or code fences.
+Ensure all quotes, brackets, and braces are closed.
+
+Previous invalid output (tail):
+ormance (ECOG 0). Active surveillance is a reasonable initial management strategy for patients with localized prostate cancer, particularly those with lower PSA levels, less aggressive Gleason scores, and fewer symptoms [PDQ p.74]. However, the patient's high PSA level and Gleason score (3+4) place them in a higher risk category for progression, making active surveillance less ideal as the sole initial approach, although it could be considered if the patient prefers to avoid immediate treatment and is closely monitored. Given the high priority for urinary continence, immediate treatment might be preferred.",
+      "description": "Active surveillance involves monitoring the patient's PSA levels, digital rectal exams, and potentially other tests (like MRI) to track the cancer's growth. Treatment is initiated only if the cancer shows signs of significant progression (e.g., rising PSA, worsening symptoms). This approach avoids the risks and side effects of immediate treatment but carries the risk of cancer progression during the surveillance period. The patient will need regular follow-up appointments and PSA testing. The expected benefits include avoiding immediate treatment side effects. Potential risks include the possibility of cancer progression during surveillance and the need for treatment later if progression occurs. The patient's preferences regarding treatment intensity and follow-up burden should be discussed."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radiation therapy (EBRT) is a standard treatment option for localized prostate cancer, offering a potential cure while preserving urinary function [PDQ p.74]. It is often used in combination with hormonal therapy, but can be used alone. Given the patient's high priority for urinary continence, radiation therapy is a viable alternative to surgery. The patient's age and performance status are suitable for radiation therapy.",
+      "description": "External-beam radiation therapy (EBRT) uses high-energy rays (like X-rays or protons) to target the prostate gland and surrounding tissues. It is typically delivered daily for several weeks (e.g., 45-50 sessions). The patient will receive daily treatment sessions, usually for about 30-60 minutes per session. Side effects can include urinary frequency, urgency, and difficulty urinating, especially in the first few weeks. Sexual side effects, such as erectile dysfunction, can also occur. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include side effects related to the radiation itself, such as urinary issues, sexual dysfunction, and potential long-term risks like incontinence or rectal bleeding. The patient will
+
+
+===== recommendation_raw_output_attempt_2 | 2026-02-24T12:09:46.563391+00:00 =====
+thought
+The user wants me to act as an oncology assistant for prostate cancer and provide a recommended treatment plan based on the provided clinical data, AI prediction, PDQ context, and rules.
+
+1.  **Analyze the Clinical Data:**
+    *   T0 N0 M0: Localized prostate cancer, no spread.
+    *   PSA: 11.0 ng/mL (High).
+    *   Performance: ECOG 0 (Good).
+    *   Age: 68 (Relatively young for prostate cancer treatment).
+    *   Family History: None known (Not a risk factor).
+    *   Lower Urinary Symptoms: Mild (Suggests potential for preserving continence).
+    *   Prior Biopsy: No prior biopsy (This is crucial - it means this is the *first* diagnosis of prostate cancer).
+    *   Comorbidities: Hypertension (Common, likely manageable).
+    *   Preferences: High priority for sexual function and urinary continence; balanced treatment intensity; moderate follow-up burden.
+    *   PSADensity: 0.086 (Low).
+
+2.  **Analyze the AI Prediction:**
+    *   csPcaProbability: 0.1756 (Low, but not negligible).
+    *   Predicted ProstatVolume: 128 mL (Moderate size).
+    *   csPcaPrediction: No (< 0.5 threshold) (This is a *prediction* based on the AI model, not a definitive diagnosis. The actual Gleason score is needed for a definitive csPca diagnosis, but the AI suggests it's likely not clinically significant based on the provided data).
+    *   csPcaDefinition: Gleason score 3+4 or higher (ISUP grade group >=2). The AI predicts this is *not* the case based on the input data.
+
+3.  **Analyze the PDQ Context:**
+    *   **Stage I/II:** Watchful waiting/active surveillance, radical prostatectomy, EBRT (with/without hormonal therapy), interstitial radioisotopes, cryosurgery, ultrasound-guided cryosurgery, proton-beam therapy, photodynamic therapy.
+    *   **Stage I:** Watchful waiting/active surveillance, radical prostatectomy, EBRT, interstitial radioisotopes, photodynamic therapy, Bicalutamide (under clinical evaluation).
+    *   **Stage II:** Watchful waiting/active surveillance, EBRT (with/without hormonal therapy), Interstitial implantation of radioisotopes, Ultrasound-guided percutaneous cryosurgery (under clinical evaluation), High-intensity focused ultrasound (under clinical evaluation), Proton-beam radiation therapy (under clinical evaluation), Photodynamic therapy (under clinical evaluation).
+    *   **General:** Active surveillance is an option for localized disease, especially with lower PSA/Gleason. Radical prostatectomy and EBRT are standard treatments for localized disease. Hormonal therapy is often used with EBRT or surgery. Cryosurgery and newer modalities are under evaluation.
+
+4.  **Synthesize and Formulate Recommendations:**
+    *   The patient has localized prostate cancer (T0N0M0) with a high PSA (11.0) and Gleason 3+4. This is Stage I disease.
+    *   The patient is 68, ECOG 0, and has mild lower urinary symptoms.
+    *   The patient has high priorities for sexual function and urinary continence.
+    *   The AI predicts *no* clinically significant prostate cancer (csPca), which is important but needs confirmation with a Gleason score (which is missing). However, the high PSA and Gleason 3+4 suggest a higher risk than typical low-risk disease.
+    *   Given the localized disease, the patient's age, good performance status, and high priorities for urinary continence, treatment options should be discussed.
+    *   **Active Surveillance (AS):** This is a reasonable initial option for localized prostate cancer, especially with lower PSA levels and less aggressive Gleason scores. The patient's high PSA (11.0) and Gleason 3+4 might make AS less ideal as the *sole* initial approach, but it could be considered if the patient prefers to avoid immediate treatment and is willing to undergo close monitoring. The patient's preferences for moderate follow-up burden might align with AS.
+    *   **Radical Prostatectomy (RP):** This is a standard curative treatment for localized prostate cancer. It offers the potential for cure and preserves urinary function. The patient's age (68) and good performance status make him a suitable candidate. RP is often combined with adjuvant radiation therapy (RT) or hormonal therapy (HT) depending on the Gleason score and other factors. Given the Gleason 3+4, adjuvant therapy is likely indicated. The patient's high priority for urinary continence is a major advantage of RP.
+    *   **Radiation Therapy (EBRT):** This is another standard treatment option for localized prostate cancer. It can be used alone or with hormonal therapy. It also preserves urinary function. It is often considered an alternative to surgery, especially if the patient prefers to avoid surgery or has contraindications. Given the patient's high priority for urinary continence, EBRT is a strong contender.
+
+5.  **Select Top 3 Options and Structure JSON:**
+    *   **Option 1: Active Surveillance (AS)**
+        *   Reasoning: Patient has localized disease (T0N0M0), good performance (ECOG 0), and mild symptoms. AS is a standard option for localized prostate cancer, especially with lower PSA/Gleason. The patient's preferences for moderate follow-up burden might support this. However, the high PSA (11.0) and Gleason 3+4 increase the risk of progression, making AS less ideal as the sole initial approach, though it could be considered if the patient prefers to avoid immediate treatment.
+        *   Description: Involves monitoring PSA, DRE, and potentially MRI. Treatment is initiated if cancer progresses. Avoids immediate side effects but carries risk of progression. Requires regular follow-up.
+    *   **Option 2: Radical Prostatectomy (RP)**
+        *   Reasoning: Patient is 68, ECOG 0, with localized disease (T0N0M0) and Gleason 3+4. RP is a standard curative option that preserves urinary function, aligning with the patient's high priority. Adjuvant therapy (likely RT or HT) would be needed due to the Gleason score. The patient's age and performance status are suitable for surgery.
+        *   Description: Surgical removal of the prostate. Offers potential cure and urinary continence. Requires recovery time. Adjuvant therapy (RT/HT) is usually recommended.
+    *   **Option 3: Radiation Therapy (EBRT)**
+        *   Reasoning: Patient has localized disease (T0N0M0), good performance (ECOG 0), and mild symptoms. EBRT is a standard treatment option that preserves urinary function, aligning with the patient's high priority. It can be used alone or with hormonal therapy. The patient's age and performance status are suitable for RT.
+        *   Description: External-beam radiation therapy targeting the prostate. Delivers daily treatment sessions over weeks. Preserves urinary function. Potential side effects include urinary and sexual issues. Adjuvant therapy (HT) is often recommended.
+
+6.  **Final JSON Construction:** Create the JSON object with the specified structure, populating the `summary`, `options` array, and `note`. Ensure all rules are
+
+
+===== recommendation_prompt | 2026-02-24T12:26:02.443400+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T0",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "11.0",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.086"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.17569930851459503,
+  "predictedProstateVolumeMl": 128,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] ts (95% CI -1.5 to 12.4) that was not statistically significant (HR, 0.84; 95% CI, 0.70–1.01). Prostate–cancer-specific mortality was 7.4% versus 11.4%, and it also was not statistically significant (HR, 0.63; 95% CI, 0.3–1.02). Although treatment for disease progression was given more frequently in the observation arm of the study, most of the treatment was for asymptomatic, local, or biochemical (PSA) progression.
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T12:26:34.799338+00:00 =====
+```json
+{
+  "summary": "The patient has clinically significant prostate cancer (csPca) based on the AI prediction, with a PSA of 11.0 ng/mL and a Gleason score of 3+4 (ISUP grade group >=2). Given the patient's age (68), T0N0M0 stage, ECOG 0 performance, mild lower urinary symptoms, and high priority for sexual function and urinary continence, active surveillance is a reasonable initial consideration, but the high PSA and Gleason score suggest a higher risk of progression. Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is particularly relevant. Hormonal therapy (like Bicalutamide) is typically used in combination with radiation or surgery, or as primary treatment for advanced disease, but is less commonly used as a primary curative option for localized disease with this PSA level, especially when surgery is considered. Therefore, radical prostatectomy is the most appropriate primary treatment option.",
+  "options": [
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is highly relevant and aligns with current guidelines for managing localized prostate cancer with these characteristics [PDQ p.74].",
+      "description": "Radical prostatectomy involves the surgical removal of the entire prostate gland. It is typically performed under general anesthesia. The patient will be monitored closely for urinary function, sexual function, and potential complications such as infection, bleeding, and erectile dysfunction. The procedure is usually performed robotically or via laparoscopy. The patient will require follow-up monitoring, including PSA testing, digital rectal exams, and potentially imaging, to assess for recurrence or metastasis. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include infection, bleeding, blood clots, erectile dysfunction, and urinary incontinence. The recovery period typically involves several weeks of recovery before returning to normal activities."
+    },
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Active surveillance is a reasonable initial management strategy for patients with localized prostate cancer, particularly those with lower PSA levels, less aggressive Gleason scores, and fewer symptoms [PDQ p.74]. However, the patient's high PSA level and Gleason score (3+4) place them in a higher risk category for progression, making active surveillance less ideal as the sole initial approach, although it could be considered if the patient prefers to avoid immediate treatment and is closely monitored. Given the high priority for urinary continence, immediate treatment might be preferred.",
+      "description": "Active surveillance involves monitoring the patient's PSA levels, digital rectal exams, and potentially other tests (like MRI) to track the cancer's growth. Treatment is initiated only if the cancer shows signs of significant progression (e.g., rising PSA, worsening symptoms). This approach avoids the risks and side effects of immediate treatment but carries the risk of cancer progression during the surveillance period. The patient will need regular follow-up appointments and PSA testing. The expected benefits include avoiding immediate treatment side effects. Potential risks include the possibility of cancer progression during surveillance and the need for treatment later if progression occurs. The patient's preferences regarding treatment intensity and follow-up burden should be discussed."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radiation therapy (EBRT) is a standard treatment option for localized prostate cancer, offering a potential cure while preserving urinary function [PDQ p.74]. It is often used in combination with hormonal therapy, but can be used alone. Given the patient's high priority for urinary continence, radiation therapy is a viable alternative to surgery. The patient's age and performance status are suitable for radiation therapy.",
+      "description": "External-beam radiation therapy (EBRT) uses high-energy rays (like X-rays or protons) to target the prostate gland and surrounding tissues. It is typically delivered daily for several weeks (e.g., 45-50 sessions). The patient will receive daily treatment sessions, usually for about 30-60 minutes per session. Side effects can include urinary frequency, urgency, and difficulty urinating, especially in the first few weeks. Sexual side effects, such as erectile dysfunction, can also occur. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include side effects related to the radiation itself, such as urinary issues, sexual dysfunction, and potential long-term risks like incontinence or rectal bleeding. The patient will
+
+
+===== recommendation_raw_output | 2026-02-24T12:26:34.799409+00:00 =====
+```json
+{
+  "summary": "The patient has clinically significant prostate cancer (csPca) based on the AI prediction, with a PSA of 11.0 ng/mL and a Gleason score of 3+4 (ISUP grade group >=2). Given the patient's age (68), T0N0M0 stage, ECOG 0 performance, mild lower urinary symptoms, and high priority for sexual function and urinary continence, active surveillance is a reasonable initial consideration, but the high PSA and Gleason score suggest a higher risk of progression. Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is particularly relevant. Hormonal therapy (like Bicalutamide) is typically used in combination with radiation or surgery, or as primary treatment for advanced disease, but is less commonly used as a primary curative option for localized disease with this PSA level, especially when surgery is considered. Therefore, radical prostatectomy is the most appropriate primary treatment option.",
+  "options": [
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radical prostatectomy is a standard curative-intent treatment for localized prostate cancer, offering the potential for cure while preserving urinary function. Given the patient's high priority for urinary continence, this option is highly relevant and aligns with current guidelines for managing localized prostate cancer with these characteristics [PDQ p.74].",
+      "description": "Radical prostatectomy involves the surgical removal of the entire prostate gland. It is typically performed under general anesthesia. The patient will be monitored closely for urinary function, sexual function, and potential complications such as infection, bleeding, and erectile dysfunction. The procedure is usually performed robotically or via laparoscopy. The patient will require follow-up monitoring, including PSA testing, digital rectal exams, and potentially imaging, to assess for recurrence or metastasis. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include infection, bleeding, blood clots, erectile dysfunction, and urinary incontinence. The recovery period typically involves several weeks of recovery before returning to normal activities."
+    },
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Active surveillance is a reasonable initial management strategy for patients with localized prostate cancer, particularly those with lower PSA levels, less aggressive Gleason scores, and fewer symptoms [PDQ p.74]. However, the patient's high PSA level and Gleason score (3+4) place them in a higher risk category for progression, making active surveillance less ideal as the sole initial approach, although it could be considered if the patient prefers to avoid immediate treatment and is closely monitored. Given the high priority for urinary continence, immediate treatment might be preferred.",
+      "description": "Active surveillance involves monitoring the patient's PSA levels, digital rectal exams, and potentially other tests (like MRI) to track the cancer's growth. Treatment is initiated only if the cancer shows signs of significant progression (e.g., rising PSA, worsening symptoms). This approach avoids the risks and side effects of immediate treatment but carries the risk of cancer progression during the surveillance period. The patient will need regular follow-up appointments and PSA testing. The expected benefits include avoiding immediate treatment side effects. Potential risks include the possibility of cancer progression during surveillance and the need for treatment later if progression occurs. The patient's preferences regarding treatment intensity and follow-up burden should be discussed."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radiation therapy (EBRT) is a standard treatment option for localized prostate cancer, offering a potential cure while preserving urinary function [PDQ p.74]. It is often used in combination with hormonal therapy, but can be used alone. Given the patient's high priority for urinary continence, radiation therapy is a viable alternative to surgery. The patient's age and performance status are suitable for radiation therapy.",
+      "description": "External-beam radiation therapy (EBRT) uses high-energy rays (like X-rays or protons) to target the prostate gland and surrounding tissues. It is typically delivered daily for several weeks (e.g., 45-50 sessions). The patient will receive daily treatment sessions, usually for about 30-60 minutes per session. Side effects can include urinary frequency, urgency, and difficulty urinating, especially in the first few weeks. Sexual side effects, such as erectile dysfunction, can also occur. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include side effects related to the radiation itself, such as urinary issues, sexual dysfunction, and potential long-term risks like incontinence or rectal bleeding. The patient will
+
+
+===== recommendation_prompt_retry_2 | 2026-02-24T12:26:34.799975+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T0",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "11.0",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.086"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.17569930851459503,
+  "predictedProstateVolumeMl": 128,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] ts (95% CI -1.5 to 12.4) that was not statistically significant (HR, 0.84; 95% CI, 0.70–1.01). Prostate–cancer-specific mortality was 7.4% versus 11.4%, and it also was not statistically significant (HR, 0.63; 95% CI, 0.3–1.02). Although treatment for disease progression was given more frequently in the observation arm of the study, most of the treatment was for asymptomatic, local, or biochemical (PSA) progression.
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+
+Your previous response was invalid or truncated JSON.
+Parsing error: MedGemma did not return valid JSON output.
+Return a NEW complete JSON object now.
+Do not include markdown or code fences.
+Ensure all quotes, brackets, and braces are closed.
+
+Previous invalid output (tail):
+ormance (ECOG 0). Active surveillance is a reasonable initial management strategy for patients with localized prostate cancer, particularly those with lower PSA levels, less aggressive Gleason scores, and fewer symptoms [PDQ p.74]. However, the patient's high PSA level and Gleason score (3+4) place them in a higher risk category for progression, making active surveillance less ideal as the sole initial approach, although it could be considered if the patient prefers to avoid immediate treatment and is closely monitored. Given the high priority for urinary continence, immediate treatment might be preferred.",
+      "description": "Active surveillance involves monitoring the patient's PSA levels, digital rectal exams, and potentially other tests (like MRI) to track the cancer's growth. Treatment is initiated only if the cancer shows signs of significant progression (e.g., rising PSA, worsening symptoms). This approach avoids the risks and side effects of immediate treatment but carries the risk of cancer progression during the surveillance period. The patient will need regular follow-up appointments and PSA testing. The expected benefits include avoiding immediate treatment side effects. Potential risks include the possibility of cancer progression during surveillance and the need for treatment later if progression occurs. The patient's preferences regarding treatment intensity and follow-up burden should be discussed."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "The patient has clinically significant prostate cancer (csPca) with a PSA of 11.0 ng/mL and Gleason score 3+4, indicating a higher risk of progression. The patient is 68 years old with T0N0M0 disease and good performance (ECOG 0). Radiation therapy (EBRT) is a standard treatment option for localized prostate cancer, offering a potential cure while preserving urinary function [PDQ p.74]. It is often used in combination with hormonal therapy, but can be used alone. Given the patient's high priority for urinary continence, radiation therapy is a viable alternative to surgery. The patient's age and performance status are suitable for radiation therapy.",
+      "description": "External-beam radiation therapy (EBRT) uses high-energy rays (like X-rays or protons) to target the prostate gland and surrounding tissues. It is typically delivered daily for several weeks (e.g., 45-50 sessions). The patient will receive daily treatment sessions, usually for about 30-60 minutes per session. Side effects can include urinary frequency, urgency, and difficulty urinating, especially in the first few weeks. Sexual side effects, such as erectile dysfunction, can also occur. The expected benefits include potential cure of localized prostate cancer and preservation of urinary function. Potential risks include side effects related to the radiation itself, such as urinary issues, sexual dysfunction, and potential long-term risks like incontinence or rectal bleeding. The patient will
+
+
+===== recommendation_raw_output_attempt_2 | 2026-02-24T12:27:18.703018+00:00 =====
+thought
+The user wants me to act as an oncology assistant for prostate cancer and provide a recommended treatment plan based on the provided clinical data, AI prediction, PDQ context, and rules.
+
+1.  **Analyze the Clinical Data:**
+    *   T0 N0 M0: Localized prostate cancer, no spread.
+    *   PSA: 11.0 ng/mL (High).
+    *   Performance: ECOG 0 (Good).
+    *   Age: 68 (Relatively young for prostate cancer treatment).
+    *   Family History: None known (Not a risk factor).
+    *   Lower Urinary Symptoms: Mild (Suggests potential for preserving continence).
+    *   Prior Biopsy: No prior biopsy (This is crucial - it means this is the *first* diagnosis of prostate cancer).
+    *   Comorbidities: Hypertension (Common, likely manageable).
+    *   Preferences: High priority for sexual function and urinary continence; balanced treatment intensity; moderate follow-up burden.
+    *   PSADensity: 0.086 (Low).
+
+2.  **Analyze the AI Prediction:**
+    *   csPcaProbability: 0.1756 (Low, but not negligible).
+    *   Predicted ProstatVolume: 128 mL (Moderate size).
+    *   csPcaPrediction: No (< 0.5 threshold) (This is a *prediction* based on the AI model, not a definitive diagnosis. The actual Gleason score is needed for a definitive csPca diagnosis, but the AI suggests it's likely not clinically significant based on the provided data).
+    *   csPcaDefinition: Gleason score 3+4 or higher (ISUP grade group >=2). The AI predicts this is *not* the case based on the input data.
+
+3.  **Analyze the PDQ Context:**
+    *   **Stage I/II:** Watchful waiting/active surveillance, radical prostatectomy, EBRT (with/without hormonal therapy), interstitial radioisotopes, cryosurgery, ultrasound-guided cryosurgery, proton-beam therapy, photodynamic therapy.
+    *   **Stage I:** Watchful waiting/active surveillance, radical prostatectomy, EBRT, interstitial radioisotopes, photodynamic therapy, Bicalutamide (under clinical evaluation).
+    *   **Stage II:** Watchful waiting/active surveillance, EBRT (with/without hormonal therapy), Interstitial implantation of radioisotopes, Ultrasound-guided percutaneous cryosurgery (under clinical evaluation), High-intensity focused ultrasound (under clinical evaluation), Proton-beam radiation therapy (under clinical evaluation), Photodynamic therapy (under clinical evaluation).
+    *   **General:** Active surveillance is an option for localized disease, especially with lower PSA/Gleason. Radical prostatectomy and EBRT are standard treatments for localized disease. Hormonal therapy is often used with EBRT or surgery. Cryosurgery and newer modalities are under evaluation.
+
+4.  **Synthesize and Formulate Recommendations:**
+    *   The patient has localized prostate cancer (T0N0M0) with a high PSA (11.0) and Gleason 3+4. This is Stage I disease.
+    *   The patient is 68, ECOG 0, and has mild lower urinary symptoms.
+    *   The patient has high priorities for sexual function and urinary continence.
+    *   The AI predicts *no* clinically significant prostate cancer (csPca), which is important but needs confirmation with a Gleason score (which is missing). However, the high PSA and Gleason 3+4 suggest a higher risk than typical low-risk disease.
+    *   Given the localized disease, the patient's age, good performance status, and high priorities for urinary continence, treatment options should be discussed.
+    *   **Active Surveillance (AS):** This is a reasonable initial option for localized prostate cancer, especially with lower PSA levels and less aggressive Gleason scores. The patient's high PSA (11.0) and Gleason 3+4 might make AS less ideal as the *sole* initial approach, but it could be considered if the patient prefers to avoid immediate treatment and is willing to undergo close monitoring. The patient's preferences for moderate follow-up burden might align with AS.
+    *   **Radical Prostatectomy (RP):** This is a standard curative treatment for localized prostate cancer. It offers the potential for cure and preserves urinary function. The patient's age (68) and good performance status make him a suitable candidate. RP is often combined with adjuvant radiation therapy (RT) or hormonal therapy (HT) depending on the Gleason score and other factors. Given the Gleason 3+4, adjuvant therapy is likely indicated. The patient's high priority for urinary continence is a major advantage of RP.
+    *   **Radiation Therapy (EBRT):** This is another standard treatment option for localized prostate cancer. It can be used alone or with hormonal therapy. It also preserves urinary function. It is often considered an alternative to surgery, especially if the patient prefers to avoid surgery or has contraindications. Given the patient's high priority for urinary continence, EBRT is a strong contender.
+
+5.  **Select Top 3 Options and Structure JSON:**
+    *   **Option 1: Active Surveillance (AS)**
+        *   Reasoning: Patient has localized disease (T0N0M0), good performance (ECOG 0), and mild symptoms. AS is a standard option for localized prostate cancer, especially with lower PSA/Gleason. The patient's preferences for moderate follow-up burden might support this. However, the high PSA (11.0) and Gleason 3+4 increase the risk of progression, making AS less ideal as the sole initial approach, though it could be considered if the patient prefers to avoid immediate treatment.
+        *   Description: Involves monitoring PSA, DRE, and potentially MRI. Treatment is initiated if cancer progresses. Avoids immediate side effects but carries risk of progression. Requires regular follow-up.
+    *   **Option 2: Radical Prostatectomy (RP)**
+        *   Reasoning: Patient is 68, ECOG 0, with localized disease (T0N0M0) and Gleason 3+4. RP is a standard curative option that preserves urinary function, aligning with the patient's high priority. Adjuvant therapy (likely RT or HT) would be needed due to the Gleason score. The patient's age and performance status are suitable for surgery.
+        *   Description: Surgical removal of the prostate. Offers potential cure and urinary continence. Requires recovery time. Adjuvant therapy (RT/HT) is usually recommended.
+    *   **Option 3: Radiation Therapy (EBRT)**
+        *   Reasoning: Patient has localized disease (T0N0M0), good performance (ECOG 0), and mild symptoms. EBRT is a standard treatment option that preserves urinary function, aligning with the patient's high priority. It can be used alone or with hormonal therapy. The patient's age and performance status are suitable for RT.
+        *   Description: External-beam radiation therapy targeting the prostate. Delivers daily treatment sessions over weeks. Preserves urinary function. Potential side effects include urinary and sexual issues. Adjuvant therapy (HT) is often recommended.
+
+6.  **Final JSON Construction:** Create the JSON object with the specified structure, populating the `summary`, `options` array, and `note`. Ensure all rules are
+
+
+===== recommendation_prompt | 2026-02-24T13:41:42.521577+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T2",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "6.6",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.114"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.26053518056869507,
+  "predictedProstateVolumeMl": 58,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] = .2). Nor was there a difference in prostate– cancer-specific mortality (3.9% vs. 5.2%; HR, 0.78; 95% CI, 0.46–1.33; P = .34) The 10-year cumulative risk of severe (grade 3) late toxicity in the immediate radiation study group was 5.3% versus 2.5% in the observation group (P = .052). Late adverse effects of any grade were also higher in the immediate radiation group (70.8% vs. 59.7%; P = .001). Radical prostatectomy has been compared with watchful waiting or active surveillance/active monitoring. For more information, see the Radical prostatectomy compared with other treatment options section. Evidence (radical prostatectomy compared with watchful waiting): 1. The Prostate Intervention Versus Observation Trial (PIVOT-1 or VA-CSP-407 [NCT00007644]) is a randomized trial conducted in the PSA screening era that directly compared radical prostatectomy with watchful waiting. From November 1
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T13:42:14.507411+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T2N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), but the patient has high priorities for urinary continence and sexual function, and a balanced treatment intensity preference. Given the low csPca probability and the patient's preferences, active surveillance is a reasonable initial consideration, but the high priority for urinary continence and sexual function warrants discussion of surgical options.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The AI prediction indicates a low probability of clinically significant prostate cancer (csPca), making active surveillance a potential option. This approach involves monitoring the cancer's progression without immediate treatment. It aligns with the patient's preference for balanced treatment intensity and moderate follow-up burden. However, the patient's high priority for urinary continence and sexual function may be compromised by this approach, requiring careful counseling.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and possibly imaging (like MRI) to monitor the cancer's growth. Treatment is initiated if the cancer progresses significantly. This option avoids the side effects of treatment but carries the risk of delayed treatment for potentially aggressive cancer. The patient should be counseled on the potential impact on urinary continence and sexual function, and the need for regular follow-up."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a surgical option that removes the entire prostate gland. It offers the potential for cure in early-stage prostate cancer like this patient's (T2N0M0). It is often considered for patients with high priorities for urinary continence and sexual function, as it can potentially restore these functions. While it carries surgical risks and potential long-term side effects (like incontinence and erectile dysfunction), it is a standard treatment for localized prostate cancer.",
+      "description": "Radical prostatectomy involves removing the prostate gland and seminal vesicles. It is typically performed via a perineal or retropubic approach. Potential benefits include a high chance of cure for localized cancer and restoration of urinary continence and sexual function. Risks include surgical complications, infection, bleeding, and long-term side effects such as urinary incontinence, erectile dysfunction, and bowel dysfunction. The patient should be counseled on the risks, benefits, and potential outcomes."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another primary treatment option for localized prostate cancer. It uses high-energy rays to kill cancer cells. It is less invasive than surgery but can have side effects, including urinary and bowel issues, and potentially impact sexual function. It is a standard treatment for patients who are not candidates for surgery or prefer to avoid surgery, and it can be combined with hormonal therapy.",
+      "description": "EBRT involves delivering radiation to the prostate gland from a machine outside the body. It typically requires daily treatment for several weeks. Potential benefits include a high chance of cure for localized cancer and avoidance of surgical risks. Risks include side effects such as urinary frequency, urgency, and incontinence, bowel changes, fatigue, and potential impact on sexual function. Hormonal therapy may be added to improve outcomes, especially in higher-risk patients. The patient should be counseled on the potential side effects and treatment schedule."
+    }
+  ],
+  "note": "The final decision should be made in consultation with the patient, considering their specific preferences, values, and overall health status, as well as the potential risks and benefits of each option."
+}
+```
+
+
+===== recommendation_raw_output | 2026-02-24T13:42:14.507478+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T2N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), but the patient has high priorities for urinary continence and sexual function, and a balanced treatment intensity preference. Given the low csPca probability and the patient's preferences, active surveillance is a reasonable initial consideration, but the high priority for urinary continence and sexual function warrants discussion of surgical options.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The AI prediction indicates a low probability of clinically significant prostate cancer (csPca), making active surveillance a potential option. This approach involves monitoring the cancer's progression without immediate treatment. It aligns with the patient's preference for balanced treatment intensity and moderate follow-up burden. However, the patient's high priority for urinary continence and sexual function may be compromised by this approach, requiring careful counseling.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and possibly imaging (like MRI) to monitor the cancer's growth. Treatment is initiated if the cancer progresses significantly. This option avoids the side effects of treatment but carries the risk of delayed treatment for potentially aggressive cancer. The patient should be counseled on the potential impact on urinary continence and sexual function, and the need for regular follow-up."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a surgical option that removes the entire prostate gland. It offers the potential for cure in early-stage prostate cancer like this patient's (T2N0M0). It is often considered for patients with high priorities for urinary continence and sexual function, as it can potentially restore these functions. While it carries surgical risks and potential long-term side effects (like incontinence and erectile dysfunction), it is a standard treatment for localized prostate cancer.",
+      "description": "Radical prostatectomy involves removing the prostate gland and seminal vesicles. It is typically performed via a perineal or retropubic approach. Potential benefits include a high chance of cure for localized cancer and restoration of urinary continence and sexual function. Risks include surgical complications, infection, bleeding, and long-term side effects such as urinary incontinence, erectile dysfunction, and bowel dysfunction. The patient should be counseled on the risks, benefits, and potential outcomes."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another primary treatment option for localized prostate cancer. It uses high-energy rays to kill cancer cells. It is less invasive than surgery but can have side effects, including urinary and bowel issues, and potentially impact sexual function. It is a standard treatment for patients who are not candidates for surgery or prefer to avoid surgery, and it can be combined with hormonal therapy.",
+      "description": "EBRT involves delivering radiation to the prostate gland from a machine outside the body. It typically requires daily treatment for several weeks. Potential benefits include a high chance of cure for localized cancer and avoidance of surgical risks. Risks include side effects such as urinary frequency, urgency, and incontinence, bowel changes, fatigue, and potential impact on sexual function. Hormonal therapy may be added to improve outcomes, especially in higher-risk patients. The patient should be counseled on the potential side effects and treatment schedule."
+    }
+  ],
+  "note": "The final decision should be made in consultation with the patient, considering their specific preferences, values, and overall health status, as well as the potential risks and benefits of each option."
+}
+```
+
+
+===== recommendation_prompt | 2026-02-24T13:49:20.555142+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "psa": "6.6",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.114"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.26053518056869507,
+  "predictedProstateVolumeMl": 58,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] = .2). Nor was there a difference in prostate– cancer-specific mortality (3.9% vs. 5.2%; HR, 0.78; 95% CI, 0.46–1.33; P = .34) The 10-year cumulative risk of severe (grade 3) late toxicity in the immediate radiation study group was 5.3% versus 2.5% in the observation group (P = .052). Late adverse effects of any grade were also higher in the immediate radiation group (70.8% vs. 59.7%; P = .001). Radical prostatectomy has been compared with watchful waiting or active surveillance/active monitoring. For more information, see the Radical prostatectomy compared with other treatment options section. Evidence (radical prostatectomy compared with watchful waiting): 1. The Prostate Intervention Versus Observation Trial (PIVOT-1 or VA-CSP-407 [NCT00007644]) is a randomized trial conducted in the PSA screening era that directly compared radical prostatectomy with watchful waiting. From November 1
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T13:49:53.977064+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (Gleason score 3+4 or higher, PSA 6.6, ECOG 0) with a low risk of clinically significant disease (csPca probability 0.26). Given the patient's high priority for sexual function and urinary continence, and balanced treatment intensity preference, active surveillance is a reasonable initial approach. However, due to the Gleason score and PSA level, definitive treatment is also a consideration. The patient's age and comorbidities do not preclude surgery or radiation.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has a low probability of clinically significant prostate cancer (csPca probability 0.26) and is asymptomatic (ECOG 0). Active surveillance is a standard option for low-risk localized prostate cancer, allowing the patient to avoid immediate treatment while monitoring disease progression. This approach aligns with the patient's preference for balanced treatment intensity and moderate follow-up burden. [PDQ p.74]",
+      "description": "Active surveillance involves regular PSA monitoring, digital rectal exams, and potentially repeat biopsies based on PSA trends. The goal is to delay or avoid treatment until the cancer becomes more advanced or causes symptoms. Benefits include avoiding immediate side effects of treatment. Risks include potential progression of cancer and the possibility of needing treatment later. The patient's high priority for sexual function and urinary continence is less likely to be impacted by active surveillance compared to immediate treatment."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "The patient has localized prostate cancer with a Gleason score of 3+4, which is considered intermediate risk. Radical prostatectomy is a standard curative treatment for localized prostate cancer, offering a high chance of preventing progression and metastasis. It is a suitable option for a patient with a Gleason score of 3+4, PSA of 6.6, and ECOG 0, who desires definitive treatment. [PDQ p.32, PDQ p.74]",
+      "description": "Radical prostatectomy involves the surgical removal of the entire prostate gland and seminal vesicles. It is typically performed under general anesthesia. Potential benefits include a high rate of cancer control and preservation of urinary function (though incontinence is a potential risk). Risks include surgical complications (bleeding, infection, injury to adjacent organs), erectile dysfunction, and urinary incontinence. The patient's high priority for sexual function and urinary continence should be discussed in detail with the surgeon regarding the potential risks and benefits of this option."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "Radiation therapy, specifically external-beam radiation therapy (EBRT), is another standard curative treatment option for localized prostate cancer, particularly for patients who are not surgical candidates or prefer to avoid surgery. It offers a high chance of preventing cancer progression and metastasis. Given the patient's Gleason score and PSA level, EBRT is a viable alternative to surgery. [PDQ p.32, PDQ p.74]",
+      "description": "EBRT involves delivering high-energy radiation beams to the prostate gland from a machine outside the body. It is typically delivered daily for several weeks. Potential benefits include a high rate of cancer control and preservation of urinary function. Risks include potential side effects such as urinary incontinence, erectile dysfunction, rectal bleeding, and fatigue. The patient's high priority for sexual function and urinary continence should be discussed in detail with the radiation oncologist regarding the potential risks and benefits of this option."
+    }
+  ],
+  "note": "The patient's preference for high priority sexual function and urinary continence should be discussed with both the surgeon and the radiation oncologist when considering radical prostatectomy and radiation therapy, respectively. The decision should be individualized based on the patient's overall health, preferences, and the specific characteristics of their cancer."
+}
+```
+
+
+===== recommendation_raw_output | 2026-02-24T13:49:53.977132+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (Gleason score 3+4 or higher, PSA 6.6, ECOG 0) with a low risk of clinically significant disease (csPca probability 0.26). Given the patient's high priority for sexual function and urinary continence, and balanced treatment intensity preference, active surveillance is a reasonable initial approach. However, due to the Gleason score and PSA level, definitive treatment is also a consideration. The patient's age and comorbidities do not preclude surgery or radiation.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has a low probability of clinically significant prostate cancer (csPca probability 0.26) and is asymptomatic (ECOG 0). Active surveillance is a standard option for low-risk localized prostate cancer, allowing the patient to avoid immediate treatment while monitoring disease progression. This approach aligns with the patient's preference for balanced treatment intensity and moderate follow-up burden. [PDQ p.74]",
+      "description": "Active surveillance involves regular PSA monitoring, digital rectal exams, and potentially repeat biopsies based on PSA trends. The goal is to delay or avoid treatment until the cancer becomes more advanced or causes symptoms. Benefits include avoiding immediate side effects of treatment. Risks include potential progression of cancer and the possibility of needing treatment later. The patient's high priority for sexual function and urinary continence is less likely to be impacted by active surveillance compared to immediate treatment."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "The patient has localized prostate cancer with a Gleason score of 3+4, which is considered intermediate risk. Radical prostatectomy is a standard curative treatment for localized prostate cancer, offering a high chance of preventing progression and metastasis. It is a suitable option for a patient with a Gleason score of 3+4, PSA of 6.6, and ECOG 0, who desires definitive treatment. [PDQ p.32, PDQ p.74]",
+      "description": "Radical prostatectomy involves the surgical removal of the entire prostate gland and seminal vesicles. It is typically performed under general anesthesia. Potential benefits include a high rate of cancer control and preservation of urinary function (though incontinence is a potential risk). Risks include surgical complications (bleeding, infection, injury to adjacent organs), erectile dysfunction, and urinary incontinence. The patient's high priority for sexual function and urinary continence should be discussed in detail with the surgeon regarding the potential risks and benefits of this option."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "Radiation therapy, specifically external-beam radiation therapy (EBRT), is another standard curative treatment option for localized prostate cancer, particularly for patients who are not surgical candidates or prefer to avoid surgery. It offers a high chance of preventing cancer progression and metastasis. Given the patient's Gleason score and PSA level, EBRT is a viable alternative to surgery. [PDQ p.32, PDQ p.74]",
+      "description": "EBRT involves delivering high-energy radiation beams to the prostate gland from a machine outside the body. It is typically delivered daily for several weeks. Potential benefits include a high rate of cancer control and preservation of urinary function. Risks include potential side effects such as urinary incontinence, erectile dysfunction, rectal bleeding, and fatigue. The patient's high priority for sexual function and urinary continence should be discussed in detail with the radiation oncologist regarding the potential risks and benefits of this option."
+    }
+  ],
+  "note": "The patient's preference for high priority sexual function and urinary continence should be discussed with both the surgeon and the radiation oncologist when considering radical prostatectomy and radiation therapy, respectively. The decision should be individualized based on the patient's overall health, preferences, and the specific characteristics of their cancer."
+}
+```
+
+
+===== recommendation_prompt | 2026-02-24T13:52:14.575216+00:00 =====
+You are an oncology assistant for prostate cancer.
+Use the full case data and AI prediction below plus PDQ context to recommend treatment.
+Return STRICT JSON only. Do not use markdown, code fences, or extra keys.
+
+Clinical data:
+{
+  "tStage": "T0",
+  "nStage": "N0",
+  "mStage": "M0",
+  "psa": "6.6",
+  "performance": "ECOG 0",
+  "age": "68",
+  "familyHistory": "None known",
+  "lowerUrinarySymptoms": "Mild",
+  "priorBiopsy": "No prior biopsy",
+  "comorbidities": [
+    "Hypertension"
+  ],
+  "preferencesSexualFunction": "High priority",
+  "preferencesUrinaryContinence": "High priority",
+  "preferencesTreatmentIntensity": "Balanced",
+  "preferencesFollowUpBurden": "Moderate",
+  "additionalPreferences": "",
+  "psaDensity": "0.114"
+}
+
+AI prediction:
+{
+  "csPcaProbability": 0.26053518056869507,
+  "predictedProstateVolumeMl": 58,
+  "csPcaPrediction": "No (< 0.5 threshold)",
+  "csPcaDefinition": "Clinically significant prostate cancer: Gleason score 3+4 or higher (ISUP grade group >=2)."
+}
+
+Required JSON schema:
+{
+  "summary": "brief overall recommendation summary",
+  "options": [
+    {
+      "title": "treatment option name",
+      "reasoning": "why this option fits this patient, personalized to inputs, include PDQ citations like [PDQ p.X]",
+      "description": "what the treatment involves, expected benefits/risks, and practical considerations"
+    },
+    {
+      "title": "second option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    },
+    {
+      "title": "third option",
+      "reasoning": "patient-specific reasoning with PDQ citations",
+      "description": "treatment description"
+    }
+  ],
+  "note": "clinician safety caveat"
+}
+Rules:
+- Provide exactly 3 ranked treatment options.
+- Keep output valid JSON.
+- Keep each option's reasoning and description concise (about 2-4 sentences each).
+- End only after a complete JSON object (all quotes/braces closed).
+- If evidence is uncertain, state uncertainty in reasoning.
+
+PDQ RAG context:
+[PDQ p.32] therapy with surgery or radiation. Treatment options for each stage of prostate cancer are presented in Table 6. Table 6. Treatment Options by Stage for Prostate Cancer Stage (TNM Definitions) Treatment Options Stage I Prostate Cancer Watchful waiting or active surveillance/active monitoring Radical prostatectomy External-beam radiation therapy (EBRT) Interstitial implantation of radioisotopes Photodynamic therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage II Prostate Cancer Watchful waiting or active surveillance/active monitoring EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose) polymerase; TURP = transurethral resection of the prostate.
+[PDQ p.33] Stage (TNM Definitions) Treatment Options Radical prostatectomy EBRT with or without hormonal therapy Interstitial implantation of radioisotopes Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Photodynamic therapy (under clinical evaluation) Neoadjuvant hormonal therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) Stage III Prostate Cancer EBRT with or without hormonal therapy Hormonal manipulations with or without radiation therapy Radical prostatectomy with or without EBRT Watchful waiting or active surveillance/active monitoring Cryosurgery (under clinical evaluation) Proton-beam therapy (under clinical evaluation) Bicalutamide (under clinical evaluation) EBRT = external-beam radiation therapy; LH-RH = luteinizing hormone-releasing hormone; mCRPC = metastatic castration-resistant prostate cancer; PARP = poly (ADP-ribose)
+[PDQ p.74] oral doses (2,080 mg qd). Clodronate therapy had no favorable impact on either time to symptomatic bone metastasis or survival.[5][Level of evidence A1] Treatment Options for Stage II Prostate Cancer Treatment options for patients with stage II prostate cancer include: 1. Watchful waiting or active surveillance/active monitoring. 2. Radical prostatectomy. 3. External-beam radiation therapy (EBRT) with or without hormonal therapy. 4. Interstitial implantation of radioisotopes. 5. Ultrasound-guided percutaneous cryosurgery (under clinical evaluation). 6. High-intensity focused ultrasound (under clinical evaluation). 7. Proton-beam radiation therapy (under clinical evaluation). 8. Photodynamic therapy (under clinical evaluation).
+[PDQ p.67] = .2). Nor was there a difference in prostate– cancer-specific mortality (3.9% vs. 5.2%; HR, 0.78; 95% CI, 0.46–1.33; P = .34) The 10-year cumulative risk of severe (grade 3) late toxicity in the immediate radiation study group was 5.3% versus 2.5% in the observation group (P = .052). Late adverse effects of any grade were also higher in the immediate radiation group (70.8% vs. 59.7%; P = .001). Radical prostatectomy has been compared with watchful waiting or active surveillance/active monitoring. For more information, see the Radical prostatectomy compared with other treatment options section. Evidence (radical prostatectomy compared with watchful waiting): 1. The Prostate Intervention Versus Observation Trial (PIVOT-1 or VA-CSP-407 [NCT00007644]) is a randomized trial conducted in the PSA screening era that directly compared radical prostatectomy with watchful waiting. From November 1
+
+
+===== recommendation_raw_output_attempt_1 | 2026-02-24T13:52:46.963422+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T0N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), indicating a low Gleason score (likely 3+3 or 3+4). Given the patient's high priority for urinary continence and sexual function, and balanced treatment intensity preference, active surveillance is a reasonable initial approach, especially considering the low csPca probability. However, if the patient prefers more definitive treatment or if the csPca probability were higher, surgery or radiation would be considered. Given the low csPca probability, active surveillance is the most appropriate initial recommendation.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has localized prostate cancer (T0N0M0) with a low probability of clinically significant prostate cancer (csPca) based on the AI prediction (csPcaProbability = 0.26). This suggests a low Gleason score (likely 3+3 or 3+4). The patient's high priority for urinary continence and sexual function, along with a balanced treatment intensity preference, makes active surveillance a suitable initial management strategy. Active surveillance involves monitoring the cancer's progression without immediate treatment, allowing the patient to avoid the side effects of therapy while closely tracking the disease. PDQ p.74 suggests active surveillance is an option for stage II prostate cancer, and while this patient is T0N0M0, the principle of monitoring progression applies.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and potentially imaging (like MRI) to monitor the cancer's growth rate. Treatment is initiated only if the cancer progresses significantly (e.g., PSA rises rapidly, symptoms develop). This approach avoids the side effects of surgery or radiation but requires significant patient commitment to follow-up and lifestyle adjustments. The patient should be counseled on the risks (potential for progression, need for close monitoring) and benefits (avoiding treatment side effects)."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a definitive surgical treatment for localized prostate cancer. It involves removing the entire prostate gland and seminal vesicles. This option offers a high chance of cure for localized disease, especially in younger patients with lower PSA levels and favorable Gleason scores. Given the patient's age (68) and low csPca probability, surgery could be considered if the patient prefers a more definitive approach or if the low csPca probability changes over time. The patient's high priority for urinary continence and sexual function is a key factor, as radical prostatectomy is the only treatment option that reliably preserves these functions. PDQ p.32 lists radical prostatectomy as a treatment option for stage I and II prostate cancer.",
+      "description": "Radical prostatectomy is a major surgery typically performed under general anesthesia. It requires several weeks of recovery time. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include surgical complications (bleeding, infection, injury to nearby organs), erectile dysfunction, urinary incontinence, and the need for lifelong testosterone suppression therapy (hormone therapy) to prevent recurrence. The patient should be thoroughly counseled on the risks, benefits, and recovery process."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another definitive treatment option for localized prostate cancer. It uses high-energy X-rays to kill cancer cells. EBRT can be used alone or in combination with hormone therapy. It offers a high chance of cancer control and preserves urinary and sexual function, similar to surgery. Given the patient's low csPca probability, EBRT could be considered if the patient prefers radiation over surgery or if surgery is contraindicated or declined. The patient's high priority for urinary continence and sexual function makes radiation a viable alternative to surgery. PDQ p.32 lists EBRT as a treatment option for stage I and II prostate cancer.",
+      "description": "EBRT typically involves daily treatment sessions over several weeks (e.g., 4-6 weeks). It is usually administered at a specialized radiation oncology center. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include side effects related to the radiation dose, such as urinary issues (frequency, urgency, incontinence), bowel issues (constipation, diarrhea), fatigue, and potential long-term effects like rectal bleeding or bladder problems. The patient should be counseled on the treatment schedule, potential side effects, and recovery."
+    }
+  ],
+  "note": "The patient's preference for urinary continence and sexual function is a critical factor in choosing between radical prostatectomy and radiation therapy. Active surveillance is the least invasive option but carries the risk of disease progression. The decision should be made in collaboration with the patient after thorough counseling on the risks, benefits, and potential outcomes of each option."
+}
+```
+
+
+===== recommendation_raw_output | 2026-02-24T13:52:46.963500+00:00 =====
+```json
+{
+  "summary": "The patient has localized prostate cancer (T0N0M0) with a PSA of 6.6 ng/mL and is clinically well (ECOG 0). The AI prediction suggests a low probability of clinically significant prostate cancer (csPca), indicating a low Gleason score (likely 3+3 or 3+4). Given the patient's high priority for urinary continence and sexual function, and balanced treatment intensity preference, active surveillance is a reasonable initial approach, especially considering the low csPca probability. However, if the patient prefers more definitive treatment or if the csPca probability were higher, surgery or radiation would be considered. Given the low csPca probability, active surveillance is the most appropriate initial recommendation.",
+  "options": [
+    {
+      "title": "Active Surveillance",
+      "reasoning": "The patient has localized prostate cancer (T0N0M0) with a low probability of clinically significant prostate cancer (csPca) based on the AI prediction (csPcaProbability = 0.26). This suggests a low Gleason score (likely 3+3 or 3+4). The patient's high priority for urinary continence and sexual function, along with a balanced treatment intensity preference, makes active surveillance a suitable initial management strategy. Active surveillance involves monitoring the cancer's progression without immediate treatment, allowing the patient to avoid the side effects of therapy while closely tracking the disease. PDQ p.74 suggests active surveillance is an option for stage II prostate cancer, and while this patient is T0N0M0, the principle of monitoring progression applies.",
+      "description": "Active surveillance involves regular PSA testing, digital rectal exams, and potentially imaging (like MRI) to monitor the cancer's growth rate. Treatment is initiated only if the cancer progresses significantly (e.g., PSA rises rapidly, symptoms develop). This approach avoids the side effects of surgery or radiation but requires significant patient commitment to follow-up and lifestyle adjustments. The patient should be counseled on the risks (potential for progression, need for close monitoring) and benefits (avoiding treatment side effects)."
+    },
+    {
+      "title": "Radical Prostatectomy",
+      "reasoning": "Radical prostatectomy is a definitive surgical treatment for localized prostate cancer. It involves removing the entire prostate gland and seminal vesicles. This option offers a high chance of cure for localized disease, especially in younger patients with lower PSA levels and favorable Gleason scores. Given the patient's age (68) and low csPca probability, surgery could be considered if the patient prefers a more definitive approach or if the low csPca probability changes over time. The patient's high priority for urinary continence and sexual function is a key factor, as radical prostatectomy is the only treatment option that reliably preserves these functions. PDQ p.32 lists radical prostatectomy as a treatment option for stage I and II prostate cancer.",
+      "description": "Radical prostatectomy is a major surgery typically performed under general anesthesia. It requires several weeks of recovery time. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include surgical complications (bleeding, infection, injury to nearby organs), erectile dysfunction, urinary incontinence, and the need for lifelong testosterone suppression therapy (hormone therapy) to prevent recurrence. The patient should be thoroughly counseled on the risks, benefits, and recovery process."
+    },
+    {
+      "title": "Radiation Therapy (EBRT)",
+      "reasoning": "External-beam radiation therapy (EBRT) is another definitive treatment option for localized prostate cancer. It uses high-energy X-rays to kill cancer cells. EBRT can be used alone or in combination with hormone therapy. It offers a high chance of cancer control and preserves urinary and sexual function, similar to surgery. Given the patient's low csPca probability, EBRT could be considered if the patient prefers radiation over surgery or if surgery is contraindicated or declined. The patient's high priority for urinary continence and sexual function makes radiation a viable alternative to surgery. PDQ p.32 lists EBRT as a treatment option for stage I and II prostate cancer.",
+      "description": "EBRT typically involves daily treatment sessions over several weeks (e.g., 4-6 weeks). It is usually administered at a specialized radiation oncology center. Potential benefits include a high rate of cancer control and preservation of urinary and sexual function. Potential risks include side effects related to the radiation dose, such as urinary issues (frequency, urgency, incontinence), bowel issues (constipation, diarrhea), fatigue, and potential long-term effects like rectal bleeding or bladder problems. The patient should be counseled on the treatment schedule, potential side effects, and recovery."
+    }
+  ],
+  "note": "The patient's preference for urinary continence and sexual function is a critical factor in choosing between radical prostatectomy and radiation therapy. Active surveillance is the least invasive option but carries the risk of disease progression. The decision should be made in collaboration with the patient after thorough counseling on the risks, benefits, and potential outcomes of each option."
+}
+```
